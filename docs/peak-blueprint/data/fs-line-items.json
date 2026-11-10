@@ -1,0 +1,306 @@
+[
+ {
+  "code": "BS-A-01",
+  "statement": "BS",
+  "section": "current_asset",
+  "sort_order": 1,
+  "name_th": "เงินสดและรายการเทียบเท่าเงินสด",
+  "name_en": "Cash and cash equivalents"
+ },
+ {
+  "code": "BS-A-02",
+  "statement": "BS",
+  "section": "current_asset",
+  "sort_order": 2,
+  "name_th": "เงินลงทุนชั่วคราว",
+  "name_en": "Short-term investments"
+ },
+ {
+  "code": "BS-A-03",
+  "statement": "BS",
+  "section": "current_asset",
+  "sort_order": 3,
+  "name_th": "ลูกหนี้การค้าและลูกหนี้หมุนเวียนอื่น",
+  "name_en": "Trade and other current receivables"
+ },
+ {
+  "code": "BS-A-04",
+  "statement": "BS",
+  "section": "current_asset",
+  "sort_order": 4,
+  "name_th": "เงินให้กู้ยืมระยะสั้น",
+  "name_en": "Short-term loans"
+ },
+ {
+  "code": "BS-A-05",
+  "statement": "BS",
+  "section": "current_asset",
+  "sort_order": 5,
+  "name_th": "สินค้าคงเหลือ",
+  "name_en": "Inventories"
+ },
+ {
+  "code": "BS-A-06",
+  "statement": "BS",
+  "section": "current_asset",
+  "sort_order": 6,
+  "name_th": "สินทรัพย์หมุนเวียนอื่น",
+  "name_en": "Other current assets"
+ },
+ {
+  "code": "BS-A-07",
+  "statement": "BS",
+  "section": "current_asset",
+  "sort_order": 7,
+  "name_th": "สินทรัพย์ไม่หมุนเวียนที่ถือไว้เพื่อขาย",
+  "name_en": "Non-current assets held for sale"
+ },
+ {
+  "code": "BS-A-11",
+  "statement": "BS",
+  "section": "non_current_asset",
+  "sort_order": 11,
+  "name_th": "เงินลงทุนระยะยาว",
+  "name_en": "Long-term investments"
+ },
+ {
+  "code": "BS-A-12",
+  "statement": "BS",
+  "section": "non_current_asset",
+  "sort_order": 12,
+  "name_th": "เงินให้กู้ยืมระยะยาว",
+  "name_en": "Long-term loans"
+ },
+ {
+  "code": "BS-A-13",
+  "statement": "BS",
+  "section": "non_current_asset",
+  "sort_order": 13,
+  "name_th": "อสังหาริมทรัพย์เพื่อการลงทุน",
+  "name_en": "Investment property"
+ },
+ {
+  "code": "BS-A-14",
+  "statement": "BS",
+  "section": "non_current_asset",
+  "sort_order": 14,
+  "name_th": "ที่ดิน อาคารและอุปกรณ์",
+  "name_en": "Property, plant and equipment"
+ },
+ {
+  "code": "BS-A-15",
+  "statement": "BS",
+  "section": "non_current_asset",
+  "sort_order": 15,
+  "name_th": "สินทรัพย์ไม่มีตัวตน",
+  "name_en": "Intangible assets"
+ },
+ {
+  "code": "BS-A-16",
+  "statement": "BS",
+  "section": "non_current_asset",
+  "sort_order": 16,
+  "name_th": "สินทรัพย์ไม่หมุนเวียนอื่น",
+  "name_en": "Other non-current assets"
+ },
+ {
+  "code": "BS-L-01",
+  "statement": "BS",
+  "section": "current_liability",
+  "sort_order": 21,
+  "name_th": "เงินเบิกเกินบัญชีและเงินกู้ยืมระยะสั้นจากสถาบันการเงิน",
+  "name_en": "Bank overdrafts and short-term borrowings from financial institutions"
+ },
+ {
+  "code": "BS-L-02",
+  "statement": "BS",
+  "section": "current_liability",
+  "sort_order": 22,
+  "name_th": "เจ้าหนี้การค้าและเจ้าหนี้หมุนเวียนอื่น",
+  "name_en": "Trade and other current payables"
+ },
+ {
+  "code": "BS-L-03",
+  "statement": "BS",
+  "section": "current_liability",
+  "sort_order": 23,
+  "name_th": "ส่วนของหนี้สินระยะยาวที่ถึงกำหนดชำระภายในหนึ่งปี",
+  "name_en": "Current portion of long-term liabilities"
+ },
+ {
+  "code": "BS-L-04",
+  "statement": "BS",
+  "section": "current_liability",
+  "sort_order": 24,
+  "name_th": "เงินกู้ยืมระยะสั้น",
+  "name_en": "Short-term borrowings"
+ },
+ {
+  "code": "BS-L-05",
+  "statement": "BS",
+  "section": "current_liability",
+  "sort_order": 25,
+  "name_th": "ภาษีเงินได้ค้างจ่าย",
+  "name_en": "Income tax payable"
+ },
+ {
+  "code": "BS-L-06",
+  "statement": "BS",
+  "section": "current_liability",
+  "sort_order": 26,
+  "name_th": "ประมาณการหนี้สินระยะสั้น",
+  "name_en": "Short-term provisions"
+ },
+ {
+  "code": "BS-L-07",
+  "statement": "BS",
+  "section": "current_liability",
+  "sort_order": 27,
+  "name_th": "หนี้สินหมุนเวียนอื่น",
+  "name_en": "Other current liabilities"
+ },
+ {
+  "code": "BS-L-11",
+  "statement": "BS",
+  "section": "non_current_liability",
+  "sort_order": 31,
+  "name_th": "เงินกู้ยืมระยะยาว",
+  "name_en": "Long-term borrowings"
+ },
+ {
+  "code": "BS-L-12",
+  "statement": "BS",
+  "section": "non_current_liability",
+  "sort_order": 32,
+  "name_th": "ประมาณการหนี้สินไม่หมุนเวียนสำหรับผลประโยชน์พนักงาน",
+  "name_en": "Non-current provisions for employee benefits"
+ },
+ {
+  "code": "BS-L-13",
+  "statement": "BS",
+  "section": "non_current_liability",
+  "sort_order": 33,
+  "name_th": "ประมาณการหนี้สินไม่หมุนเวียนอื่น",
+  "name_en": "Other non-current provisions"
+ },
+ {
+  "code": "BS-L-14",
+  "statement": "BS",
+  "section": "non_current_liability",
+  "sort_order": 34,
+  "name_th": "หนี้สินไม่หมุนเวียนอื่น",
+  "name_en": "Other non-current liabilities"
+ },
+ {
+  "code": "BS-E-01",
+  "statement": "BS",
+  "section": "equity",
+  "sort_order": 41,
+  "name_th": "ทุนเรือนหุ้น",
+  "name_en": "Share capital"
+ },
+ {
+  "code": "BS-E-02",
+  "statement": "BS",
+  "section": "equity",
+  "sort_order": 42,
+  "name_th": "ส่วนเกิน (ต่ำกว่า) มูลค่าหุ้น",
+  "name_en": "Share premium (discount)"
+ },
+ {
+  "code": "BS-E-03",
+  "statement": "BS",
+  "section": "equity",
+  "sort_order": 43,
+  "name_th": "กำไรสะสม - จัดสรรแล้ว",
+  "name_en": "Retained earnings - appropriated"
+ },
+ {
+  "code": "BS-E-04",
+  "statement": "BS",
+  "section": "equity",
+  "sort_order": 44,
+  "name_th": "กำไรสะสม - ยังไม่ได้จัดสรร",
+  "name_en": "Retained earnings - unappropriated"
+ },
+ {
+  "code": "BS-E-05",
+  "statement": "BS",
+  "section": "equity",
+  "sort_order": 45,
+  "name_th": "องค์ประกอบอื่นของส่วนของเจ้าของ",
+  "name_en": "Other components of equity"
+ },
+ {
+  "code": "PL-01",
+  "statement": "PL",
+  "section": "revenue",
+  "sort_order": 1,
+  "name_th": "รายได้จากการขายหรือการให้บริการ",
+  "name_en": "Revenue from sales or services"
+ },
+ {
+  "code": "PL-02",
+  "statement": "PL",
+  "section": "revenue",
+  "sort_order": 2,
+  "name_th": "รายได้อื่น",
+  "name_en": "Other income"
+ },
+ {
+  "code": "PL-03",
+  "statement": "PL",
+  "section": "expense",
+  "sort_order": 3,
+  "name_th": "ต้นทุนขายหรือต้นทุนการให้บริการ",
+  "name_en": "Cost of sales or services"
+ },
+ {
+  "code": "PL-04",
+  "statement": "PL",
+  "section": "expense",
+  "sort_order": 4,
+  "name_th": "ค่าใช้จ่ายในการขาย",
+  "name_en": "Selling expenses"
+ },
+ {
+  "code": "PL-05",
+  "statement": "PL",
+  "section": "expense",
+  "sort_order": 5,
+  "name_th": "ค่าใช้จ่ายในการบริหาร",
+  "name_en": "Administrative expenses"
+ },
+ {
+  "code": "PL-06",
+  "statement": "PL",
+  "section": "expense",
+  "sort_order": 6,
+  "name_th": "ค่าใช้จ่ายอื่น",
+  "name_en": "Other expenses"
+ },
+ {
+  "code": "PL-07",
+  "statement": "PL",
+  "section": "finance_cost",
+  "sort_order": 7,
+  "name_th": "ต้นทุนทางการเงิน",
+  "name_en": "Finance costs"
+ },
+ {
+  "code": "PL-08",
+  "statement": "PL",
+  "section": "income_tax",
+  "sort_order": 8,
+  "name_th": "ภาษีเงินได้",
+  "name_en": "Income tax expense"
+ },
+ {
+  "code": "NONE",
+  "statement": "NONE",
+  "section": "suspense",
+  "sort_order": 99,
+  "name_th": "ไม่แสดงในงบ (ต้องเป็นศูนย์ ณ วันปิดงวด)",
+  "name_en": "Not presented (must be zero at period end)"
+ }
+]

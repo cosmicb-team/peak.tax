@@ -1,0 +1,640 @@
+openapi: 3.1.0
+info:
+  title: Accounting & Tax Core API
+  version: 0.1.0
+  description: >
+    ต้นแบบ Accounting & Tax จากโปรแกรม PEAK
+    ดูรายละเอียดใน docs/peak-blueprint/02-api-contract.md
+servers:
+  - url: https://api.example.test/v1
+security:
+  - bearerAuth: []
+tags:
+  - { name: contacts }
+  - { name: accounts }
+  - { name: items }
+  - { name: payment-methods }
+  - { name: sales, description: quotations, invoices, receipts, billing-notes, credit-notes, deposits }
+  - { name: purchase, description: purchase-orders, expenses, goods-receipts, invoice-receipts, billing-note-expenses, credit-note-expenses, deposit-expenses }
+  - { name: journals }
+  - { name: reports }
+  - { name: settings, description: org policy, number rules, roles, period lock (PEAK ตั้งค่า 33 หน้า) }
+  - { name: inventory, description: warehouses, stock, requisition/transfer/cost-adjustment }
+  - { name: assets, description: asset groups, fixed assets, depreciation }
+  - { name: tax, description: VAT returns, WHT certificates/remittance, e-Tax }
+  - { name: integrations, description: API clients, webhooks, partner connections, bank feed, external orders }
+
+paths:
+  # ---------- master data ----------
+  /contacts:
+    get:
+      tags: [contacts]
+      summary: SearchContacts
+      parameters:
+        - { name: q, in: query, schema: { type: string }, description: name / company / 13-digit tax id }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/ActiveStatus' } }
+        - $ref: '#/components/parameters/cursor'
+        - $ref: '#/components/parameters/limit'
+      responses: { '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/ContactPage' } } } } }
+    post:
+      tags: [contacts]
+      summary: CreateContact
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ContactInput' } } } }
+      responses: { '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Contact' } } } } }
+  /contacts/{code}:
+    parameters: [ { $ref: '#/components/parameters/code' } ]
+    get: { tags: [contacts], summary: GetContact, responses: { '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Contact' } } } } } }
+    patch:
+      tags: [contacts]
+      summary: EditContact (partial; null clears a field)
+      requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/ContactInput' } } } }
+      responses: { '200': { description: OK } }
+
+  /accounts:
+    get: { tags: [accounts], summary: GetAccountCodes (chart of accounts), responses: { '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Account' } } } } } } }
+  /accounts/suggest:
+    get:
+      tags: [accounts]
+      summary: GetSuggestionAccountCodeExpense
+      parameters:
+        - { name: contactId, in: query, schema: { type: string, format: uuid } }
+        - { name: contactCode, in: query, schema: { type: string } }
+        - { name: taxId, in: query, schema: { type: string, pattern: '^[0-9]{13}$' } }
+      responses: { '200': { description: OK, content: { application/json: { schema: { type: object, properties: { mostUsed: { type: array, items: { $ref: '#/components/schemas/Account' } }, suggestion: { type: array, items: { $ref: '#/components/schemas/Account' } } } } } } } }
+  /reports/general-ledger:
+    get:
+      tags: [reports]
+      summary: GetGeneralLedger
+      parameters:
+        - { name: accountCode, in: query, required: true, schema: { type: string } }
+        - { name: fromDate, in: query, required: true, schema: { type: string, format: date } }
+        - { name: toDate, in: query, required: true, schema: { type: string, format: date } }
+        - { name: showSubAccount, in: query, schema: { type: boolean, default: false } }
+      responses: { '200': { description: OK }, '400': { $ref: '#/components/responses/Validation' }, '429': { $ref: '#/components/responses/RateLimit' } }
+  /reports/trial-balance:
+    get:
+      tags: [reports]
+      summary: GetTrialBalance
+      parameters:
+        - { name: fromMonth, in: query, required: true, schema: { type: string, pattern: '^[0-9]{6}$' } }
+        - { name: toMonth, in: query, required: true, schema: { type: string, pattern: '^[0-9]{6}$' } }
+        - { name: showSubAccount, in: query, schema: { type: boolean, default: false } }
+      responses: { '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/TrialBalance' } } } }, '429': { $ref: '#/components/responses/RateLimit' } }
+  /reports/vat-output: { get: { tags: [reports], summary: รายงานภาษีขาย, parameters: [ { $ref: '#/components/parameters/taxMonth' } ], responses: { '200': { description: OK } } } }
+  /reports/vat-input: { get: { tags: [reports], summary: รายงานภาษีซื้อ, parameters: [ { $ref: '#/components/parameters/taxMonth' } ], responses: { '200': { description: OK } } } }
+  /reports/pp30: { get: { tags: [reports], summary: ภ.พ.30, parameters: [ { $ref: '#/components/parameters/taxMonth' } ], responses: { '200': { description: OK } } } }
+  /reports/pnd:
+    get:
+      tags: [reports]
+      summary: ภ.ง.ด.1 / 3 / 53
+      parameters: [ { name: form, in: query, required: true, schema: { type: string, enum: [PND1, PND3, PND53] } }, { $ref: '#/components/parameters/taxMonth' } ]
+      responses: { '200': { description: OK } }
+  /reports/aging:
+    get: { tags: [reports], summary: AR/AP aging, parameters: [ { name: side, in: query, required: true, schema: { type: string, enum: [receivable, payable] } }, { name: asOf, in: query, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } }
+  /reports/profit-loss: { get: { tags: [reports], summary: งบกำไรขาดทุน, parameters: [ { name: fromDate, in: query, required: true, schema: { type: string, format: date } }, { name: toDate, in: query, required: true, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } } }
+  /reports/balance-sheet: { get: { tags: [reports], summary: งบแสดงฐานะการเงิน, parameters: [ { name: asOf, in: query, required: true, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } } }
+
+  /items:
+    get:
+      tags: [items]
+      summary: ListProduct / ListService
+      parameters: [ { name: type, in: query, schema: { type: string, enum: [product, service] } }, { name: q, in: query, schema: { type: string } }, { $ref: '#/components/parameters/cursor' }, { $ref: '#/components/parameters/limit' } ]
+      responses: { '200': { description: OK } }
+    post: { tags: [items], summary: CreateProduct / CreateService, requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ItemInput' } } } }, responses: { '201': { description: Created } } }
+  /items/{code}:
+    parameters: [ { $ref: '#/components/parameters/code' } ]
+    get: { tags: [items], summary: GetProduct / GetService, responses: { '200': { description: OK } } }
+
+  /payment-methods:
+    get: { tags: [payment-methods], summary: GetPaymentMethod (list), responses: { '200': { description: OK } } }
+    post: { tags: [payment-methods], summary: CreatePaymentMethod, requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PaymentMethodInput' } } } }, responses: { '201': { description: Created } } }
+
+  # ---------- documents (generic pattern, one path-set per type) ----------
+  /documents/{docType}:
+    parameters: [ { $ref: '#/components/parameters/docType' } ]
+    get:
+      tags: [sales, purchase]
+      summary: List* (quotations, invoices, receipts, ... )
+      parameters:
+        - { name: dateStart, in: query, schema: { type: string, format: date } }
+        - { name: dateEnd, in: query, schema: { type: string, format: date } }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/DocumentStatus' } }
+        - { name: contactCode, in: query, schema: { type: string } }
+        - { name: q, in: query, schema: { type: string }, description: contact name or document code }
+        - $ref: '#/components/parameters/cursor'
+        - $ref: '#/components/parameters/limit'
+      responses: { '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/DocumentPage' } } } } }
+    post:
+      tags: [sales, purchase]
+      summary: Create* (status Draft | Approve)
+      parameters: [ { $ref: '#/components/parameters/idempotency' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/DocumentInput' } } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Document' } } } }
+        '422': { $ref: '#/components/responses/BusinessRule' }
+  /documents/{docType}/{code}:
+    parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ]
+    get: { tags: [sales, purchase], summary: Get*, responses: { '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Document' } } } }, '404': { $ref: '#/components/responses/NotFound' } } }
+    put:
+      tags: [sales, purchase]
+      summary: Edit* (Draft only; full replace)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/DocumentInput' } } } }
+      responses: { '200': { description: OK }, '409': { description: Not a draft } }
+  /documents/{docType}/{code}:approve:
+    post: { tags: [sales, purchase], summary: Approve* (posts journal), parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], responses: { '200': { description: OK }, '423': { description: PERIOD_LOCKED } } }
+  /documents/{docType}/{code}:void:
+    post:
+      tags: [sales, purchase]
+      summary: Void* (reverses journal)
+      parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ]
+      requestBody: { content: { application/json: { schema: { type: object, properties: { reason: { type: string }, forceETax: { type: boolean, default: false } } } } } }
+      responses: { '200': { description: OK }, '409': { description: DOCUMENT_REFERENCED | ETAX_SUBMITTED } }
+  /documents/{docType}/{code}/payments:
+    post:
+      tags: [sales, purchase]
+      summary: Record payment (allows partial / multiple)
+      parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PaymentInput' } } } }
+      responses: { '201': { description: Created }, '422': { $ref: '#/components/responses/BusinessRule' } }
+  /documents/{docType}/{code}/tags:
+    post: { tags: [sales, purchase], summary: InsertTag, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], requestBody: { content: { application/json: { schema: { type: object, properties: { tags: { type: array, items: { type: string } } } } } } }, responses: { '200': { description: OK } } }
+    delete: { tags: [sales, purchase], summary: RemoveTag, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], responses: { '200': { description: OK } } }
+  /documents/{docType}/{code}/pdf:
+    get: { tags: [sales, purchase], summary: Render PDF (ใบกำกับภาษี / ใบเสร็จ / 50 ทวิ), parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], responses: { '200': { description: PDF, content: { application/pdf: {} } } } }
+
+  # ---------- ledger ----------
+  /journals:
+    post: { tags: [journals], summary: CreateDailyJournal (balanced), requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/JournalInput' } } } }, responses: { '201': { description: Created }, '422': { $ref: '#/components/responses/BusinessRule' } } }
+  /journals/{id}:
+    get: { tags: [journals], summary: GetDailyJournal, parameters: [ { $ref: '#/components/parameters/id' } ], responses: { '200': { description: OK } } }
+  /journals/{id}:void:
+    post: { tags: [journals], summary: VoidDailyJournal, parameters: [ { $ref: '#/components/parameters/id' } ], responses: { '200': { description: OK }, '423': { description: PERIOD_LOCKED } } }
+  /periods/{month}:lock:
+    post: { tags: [journals], summary: Lock accounting period, parameters: [ { name: month, in: path, required: true, schema: { type: string, pattern: '^[0-9]{6}$' } } ], responses: { '200': { description: OK } } }
+
+  # (Omni Channel ไม่อยู่ในบริการนี้ — ระบบแชทแยกต่างหาก คุยกับบัญชีผ่าน /documents, /contacts, /items และ webhooks เท่านั้น — ดู 12)
+  # ---------- document extras (PEAK detail page) ----------
+  /documents/{docType}/{code}:lock:
+    post: { tags: [sales, purchase], summary: Lock / unlock document (ล็อกเอกสาร), parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], requestBody: { content: { application/json: { schema: { type: object, properties: { locked: { type: boolean } } } } } }, responses: { '200': { description: OK } } }
+  /documents/{docType}/{code}:copy:
+    post: { tags: [sales, purchase], summary: Copy to new draft (คัดลอก), parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], responses: { '201': { description: Created } } }
+  /documents/{docType}/{code}:convert:
+    post: { tags: [sales, purchase], summary: Create next document from this one (QO→IV/RE, IV→RE/CN/BN, PO→EXP/GR, GR→IR, DR drawdown) — PEAK "ออกเอกสารต่อ" บางส่วนได้ตาม policy, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], requestBody: { required: true, content: { application/json: { schema: { type: object, required: [targetDocType], properties: { targetDocType: { type: string }, lines: { type: array, items: { type: object, properties: { lineId: { type: string }, quantity: { type: number }, price: { type: number } } } } } } } } }, responses: { '201': { description: Created }, '422': { $ref: '#/components/responses/BusinessRule' } } }
+  /documents/{docType}/{code}/payments/{paymentGroupId}:void:
+    post: { tags: [sales, purchase], summary: Void one payment installment, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' }, { name: paymentGroupId, in: path, required: true, schema: { type: integer } } ], responses: { '200': { description: OK } } }
+  /documents/{docType}/{code}/received-tax-invoices:
+    post: { tags: [purchase, tax], summary: Register received tax invoice(s) → JVTX 115402→115401, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], requestBody: { required: true, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/ReceivedTaxInvoiceInput' } } } } }, responses: { '201': { description: Created }, '409': { description: DUPLICATE_TAX_INVOICE } } }
+  /documents/{docType}/{code}/attachments:
+    post: { tags: [sales, purchase], summary: Upload attachment (≤10 files, 25 MB total), parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], requestBody: { content: { multipart/form-data: { schema: { type: object, properties: { file: { type: string, format: binary } } } } } }, responses: { '201': { description: Created } } }
+  /documents/{docType}/{code}/comments:
+    get: { tags: [sales, purchase], summary: List comments, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], responses: { '200': { description: OK } } }
+    post: { tags: [sales, purchase], summary: Add comment with @mentions, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], requestBody: { required: true, content: { application/json: { schema: { type: object, required: [body], properties: { body: { type: string }, mentions: { type: array, items: { type: string, format: uuid } } } } } } }, responses: { '201': { description: Created } } }
+  /documents/{docType}/{code}/history:
+    get: { tags: [sales, purchase], summary: Audit trail (ข้อมูลประวัติ), parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], responses: { '200': { description: OK } } }
+  /documents/{docType}/{code}:send-email:
+    post: { tags: [sales, purchase], summary: Email PDF + public link, parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], requestBody: { required: true, content: { application/json: { schema: { type: object, required: [to], properties: { to: { type: array, items: { type: string, format: email } }, cc: { type: array, items: { type: string } }, message: { type: string } } } } } }, responses: { '202': { description: Queued } } }
+  /documents/{docType}/{code}:etax-submit:
+    post: { tags: [tax], summary: Submit e-Tax Invoice / e-Receipt via configured provider (INET/Leceipt/Google time-stamp), parameters: [ { $ref: '#/components/parameters/docType' }, { $ref: '#/components/parameters/code' } ], responses: { '202': { description: Submitted }, '409': { description: NOT_TAX_INVOICE | ALREADY_SUBMITTED } } }
+  /public/documents/{token}:
+    get: { tags: [sales], summary: Public document page (ลิงก์สาธารณะ; policy per doc group; optional password), security: [], parameters: [ { name: token, in: path, required: true, schema: { type: string, format: uuid } }, { name: password, in: query, schema: { type: string } } ], responses: { '200': { description: HTML/PDF }, '401': { description: PASSWORD_REQUIRED } } }
+  /public/tax-invoice-requests:
+    post: { tags: [sales], summary: Customer requests a tax invoice (ลิงก์ให้ลูกค้าขอใบกำกับภาษี), security: [], requestBody: { required: true, content: { application/json: { schema: { type: object, required: [orgSlug, requesterName], properties: { orgSlug: { type: string }, receiptReference: { type: string }, requesterName: { type: string }, taxNumber: { type: string, pattern: '^[0-9]{13}$' }, branchCode: { type: string }, address: { type: string }, email: { type: string }, phone: { type: string } } } } } }, responses: { '201': { description: Created } } }
+  /document-templates:
+    get: { tags: [sales, purchase], summary: List favorites (รายการโปรด), parameters: [ { name: docType, in: query, schema: { type: string } } ], responses: { '200': { description: OK } } }
+    post: { tags: [sales, purchase], summary: Save favorite template, requestBody: { required: true, content: { application/json: { schema: { type: object, required: [docType, name, payload], properties: { docType: { type: string }, name: { type: string }, payload: { $ref: '#/components/schemas/DocumentInput' } } } } } }, responses: { '201': { description: Created } } }
+  /recurring-documents:
+    get: { tags: [sales, purchase], summary: List recurring (เอกสารอัตโนมัติ), responses: { '200': { description: OK } } }
+    post: { tags: [sales, purchase], summary: Create recurring schedule, requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RecurringDocumentInput' } } } }, responses: { '201': { description: Created } } }
+  /file-vault:
+    get: { tags: [purchase], summary: คลังเอกสาร + กล่องขาเข้า (filter source, linked), parameters: [ { name: source, in: query, schema: { type: string, enum: [upload, line, email, partner_connect, api, ocr] } }, { name: linked, in: query, schema: { type: boolean } } ], responses: { '200': { description: OK } } }
+    post: { tags: [purchase], summary: Upload file; optional OCR → prefilled expense draft, requestBody: { content: { multipart/form-data: { schema: { type: object, properties: { file: { type: string, format: binary }, ocr: { type: boolean, default: true } } } } } }, responses: { '201': { description: Created, content: { application/json: { schema: { type: object, properties: { fileId: { type: string }, suggestedExpense: { $ref: '#/components/schemas/DocumentInput' } } } } } } } }
+
+  # ---------- settings (PEAK ตั้งค่า) ----------
+  /settings/organization:
+    get: { tags: [settings], summary: ข้อมูลกิจการ / โลโก้ / VAT registration, responses: { '200': { description: OK } } }
+    patch: { tags: [settings], summary: Update organization profile, requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OrganizationInput' } } } }, responses: { '200': { description: OK } } }
+  /settings/accounting-policy:
+    get: { tags: [settings], summary: นโยบายบัญชี (GL mapping, ใบกำกับภาษี default, ภ.พ.30, สินค้า, วงเงิน, public link, e-Tax provider), responses: { '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/AccountingPolicy' } } } } } }
+    patch: { tags: [settings], summary: Update policy (partial), requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AccountingPolicy' } } } }, responses: { '200': { description: OK }, '422': { $ref: '#/components/responses/BusinessRule' } } }
+  /settings/number-rules:
+    get: { tags: [settings], summary: เลขที่เอกสาร ทุกชนิด/ชุด (main, tax_invoice, asset) + preview, responses: { '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/NumberRule' } } } } } } }
+    put: { tags: [settings], summary: Replace rules (preview next number), requestBody: { required: true, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/NumberRule' } } } } }, responses: { '200': { description: OK } } }
+  /settings/document-defaults:
+    get: { tags: [settings], summary: หมายเหตุเอกสาร + วันที่ครบกำหนด default ต่อชนิด, responses: { '200': { description: OK } } }
+    put: { tags: [settings], summary: Replace defaults, requestBody: { required: true, content: { application/json: { schema: { type: array, items: { type: object, properties: { docType: { type: string }, defaultRemark: { type: string, maxLength: 1000 }, dueDays: { type: integer, minimum: 0 } } } } } } }, responses: { '200': { description: OK } } }
+  /settings/roles:
+    get: { tags: [settings], summary: Roles (8 built-in + custom) with permission strings, responses: { '200': { description: OK } } }
+    post: { tags: [settings], summary: Create custom role, requestBody: { required: true, content: { application/json: { schema: { type: object, required: [code, name, permissions], properties: { code: { type: string }, name: { type: string }, permissions: { type: array, items: { type: string, example: create.invoice } } } } } } }, responses: { '201': { description: Created } } }
+  /settings/members:
+    get: { tags: [settings], summary: ผู้ใช้งาน + คำเชิญรอตอบรับ, responses: { '200': { description: OK } } }
+    post: { tags: [settings], summary: Invite user with role, requestBody: { required: true, content: { application/json: { schema: { type: object, required: [email, roleCode], properties: { email: { type: string, format: email }, roleCode: { type: string } } } } } }, responses: { '201': { description: Invited } } }
+  /settings/period-lock:
+    get: { tags: [settings], summary: ล็อกข้อมูลการใช้งาน (lockedBeforeDate + locked months + history), responses: { '200': { description: OK } } }
+    put: { tags: [settings], summary: Set lockedBeforeDate (null = unlock), requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { lockedBeforeDate: { type: string, format: date, nullable: true } } } } } }, responses: { '200': { description: OK } } }
+  /settings/classification-groups:
+    get: { tags: [settings], summary: กลุ่มจัดประเภท, responses: { '200': { description: OK } } }
+    post: { tags: [settings], summary: Create group (+ seed defaults), requestBody: { content: { application/json: { schema: { type: object, properties: { number: { type: string }, name: { type: string }, showOnDocument: { type: boolean }, items: { type: array, items: { type: object, properties: { number: { type: string }, name: { type: string } } } }, seedDefaults: { type: boolean } } } } } }, responses: { '201': { description: Created } } }
+  /settings/email-reports:
+    put: { tags: [settings], summary: รายงานทางอีเมล (weekly/monthly, recipients, send day), requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { weekly: { type: boolean }, monthly: { type: boolean }, recipients: { type: array, items: { type: string, format: email } }, sendDay: { type: string, enum: [mon, tue, wed, thu, fri, sat, sun] } } } } } }, responses: { '200': { description: OK } } }
+
+  # ---------- inventory ----------
+  /warehouses:
+    get: { tags: [inventory], summary: List warehouses, responses: { '200': { description: OK } } }
+    post: { tags: [inventory], summary: Create warehouse, requestBody: { required: true, content: { application/json: { schema: { type: object, required: [code, name], properties: { code: { type: string }, name: { type: string }, description: { type: string } } } } } }, responses: { '201': { description: Created } } }
+  /units:
+    get: { tags: [inventory], summary: List units (product/service), responses: { '200': { description: OK } } }
+    post: { tags: [inventory], summary: Create unit, requestBody: { required: true, content: { application/json: { schema: { type: object, required: [code, nameTh], properties: { code: { type: string }, nameTh: { type: string }, nameEn: { type: string }, kind: { type: string, enum: [product, service] } } } } } }, responses: { '201': { description: Created } } }
+  /inventory/balances:
+    get: { tags: [inventory], summary: Stock balance per item/warehouse (FIFO value), parameters: [ { name: itemCode, in: query, schema: { type: string } }, { name: warehouseCode, in: query, schema: { type: string } }, { name: asOf, in: query, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } }
+  /inventory/movements:
+    get: { tags: [inventory], summary: Stock card (การเคลื่อนไหวสินค้า), parameters: [ { name: itemCode, in: query, required: true, schema: { type: string } }, { name: fromDate, in: query, schema: { type: string, format: date } }, { name: toDate, in: query, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } }
+
+  # ---------- fixed assets ----------
+  /asset-groups:
+    get: { tags: [assets], summary: กลุ่มสินทรัพย์ (accounts, method, useful life), responses: { '200': { description: OK } } }
+    post: { tags: [assets], summary: Create asset group, requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AssetGroupInput' } } } }, responses: { '201': { description: Created } } }
+  /fixed-assets:
+    get: { tags: [assets], summary: ทะเบียนสินทรัพย์, parameters: [ { name: status, in: query, schema: { type: string, enum: [active, fully_depreciated, disposed, written_off] } } ], responses: { '200': { description: OK } } }
+    post: { tags: [assets], summary: Register asset (from PA line or manual/opening), requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/FixedAssetInput' } } } }, responses: { '201': { description: Created } } }
+  /fixed-assets/{id}:dispose:
+    post: { tags: [assets], summary: Dispose / write off (posts gain/loss JV), parameters: [ { $ref: '#/components/parameters/id' } ], requestBody: { required: true, content: { application/json: { schema: { type: object, required: [date], properties: { date: { type: string, format: date }, amount: { type: number }, paymentMethodCode: { type: string } } } } } }, responses: { '200': { description: OK } } }
+  /depreciation/runs:
+    post: { tags: [assets], summary: Run monthly depreciation → JV (status per policy), requestBody: { required: true, content: { application/json: { schema: { type: object, required: [month], properties: { month: { type: string, pattern: '^[0-9]{6}$' } } } } } }, responses: { '201': { description: Journals created } } }
+
+  # ---------- tax ----------
+  /tax/vat-returns:
+    get: { tags: [tax], summary: ภ.พ.30 / ภ.พ.36 history, responses: { '200': { description: OK } } }
+    post: { tags: [tax], summary: Compute & close VAT month (215101 vs 115401 → 215351 / 115451 / 115452), requestBody: { required: true, content: { application/json: { schema: { type: object, required: [formType, month], properties: { formType: { type: string, enum: [PP30, PP36] }, month: { type: string, pattern: '^[0-9]{6}$' }, carryOrRefund: { type: string, enum: [carry, refund] } } } } } }, responses: { '201': { description: Created }, '409': { description: ALREADY_CLOSED } } }
+  /tax/vat-returns/{id}:file:
+    post: { tags: [tax], summary: Mark filed/paid (+ payment JV), parameters: [ { $ref: '#/components/parameters/id' } ], requestBody: { content: { application/json: { schema: { type: object, properties: { filedAt: { type: string, format: date }, paidAt: { type: string, format: date }, paymentMethodCode: { type: string } } } } } }, responses: { '200': { description: OK } } }
+  /tax/wht-certificates:
+    get: { tags: [tax], summary: ภาษีหัก ณ ที่จ่าย (หักผู้ขาย) list, parameters: [ { name: formType, in: query, schema: { type: string, enum: [PND1, PND2, PND3, PND53, PND54] } }, { name: month, in: query, schema: { type: string, pattern: '^[0-9]{6}$' } }, { name: remitStatus, in: query, schema: { type: string, enum: [pending, filed, paid] } }, { name: isEwht, in: query, schema: { type: boolean } } ], responses: { '200': { description: OK } } }
+  /tax/wht-certificates/{id}/pdf:
+    get: { tags: [tax], summary: หนังสือรับรอง 50 ทวิ PDF, parameters: [ { $ref: '#/components/parameters/id' } ], responses: { '200': { description: PDF, content: { application/pdf: {} } } } }
+  /tax/wht-received:
+    get: { tags: [tax], summary: ภาษีถูกหัก ณ ที่จ่าย (ลูกค้าหักเรา) list, parameters: [ { name: month, in: query, schema: { type: string } } ], responses: { '200': { description: OK } } }
+    patch: { tags: [tax], summary: Mark certificate received (สำหรับเครดิต ภ.ง.ด.50), requestBody: { required: true, content: { application/json: { schema: { type: object, required: [ids], properties: { ids: { type: array, items: { type: string, format: uuid } }, certificateDate: { type: string, format: date } } } } } }, responses: { '200': { description: OK } } }
+  /tax/wht-remittances:
+    post: { tags: [tax], summary: Create ภ.ง.ด. remittance for month (JV Dr 2152xx Cr Bank) + Text file, requestBody: { required: true, content: { application/json: { schema: { type: object, required: [formType, month], properties: { formType: { type: string, enum: [PND1, PND2, PND3, PND53, PND54] }, month: { type: string, pattern: '^[0-9]{6}$' }, paymentMethodCode: { type: string }, paidAt: { type: string, format: date } } } } } }, responses: { '201': { description: Created } } }
+  /tax/wht-remittances/{id}/text-file:
+    get: { tags: [tax], summary: Text file ยื่นภาษีหัก ณ ที่จ่าย (RD e-filing format), parameters: [ { $ref: '#/components/parameters/id' } ], responses: { '200': { description: text/plain } } }
+  /tax/etax/status:
+    get: { tags: [tax], summary: e-Tax provider status + submission log, responses: { '200': { description: OK } } }
+
+  # ---------- integrations ----------
+  /integrations/api-clients:
+    get: { tags: [integrations], summary: List API keys / OAuth clients / MCP keys (masked), responses: { '200': { description: OK } } }
+    post: { tags: [integrations], summary: Create key (returns plaintext once), requestBody: { required: true, content: { application/json: { schema: { type: object, required: [name, kind, scopes], properties: { name: { type: string }, kind: { type: string, enum: [api_key, oauth_client, mcp] }, scopes: { type: array, items: { type: string } }, rateLimitPerMin: { type: integer }, monthlyCreditLimit: { type: integer } } } } } }, responses: { '201': { description: Created } } }
+  /integrations/api-clients/{id}:revoke:
+    post: { tags: [integrations], summary: Revoke, parameters: [ { $ref: '#/components/parameters/id' } ], responses: { '200': { description: OK } } }
+  /integrations/api-usage:
+    get: { tags: [integrations], summary: Usage per day / per client, parameters: [ { name: month, in: query, schema: { type: string } } ], responses: { '200': { description: OK } } }
+  /integrations/webhooks:
+    get: { tags: [integrations], summary: List endpoints, responses: { '200': { description: OK } } }
+    post: { tags: [integrations], summary: Create endpoint (self-service), requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WebhookEndpointInput' } } } }, responses: { '201': { description: Created (secret returned once) } } }
+  /integrations/webhooks/{id}/deliveries:
+    get: { tags: [integrations], summary: Delivery log + replay, parameters: [ { $ref: '#/components/parameters/id' }, { name: status, in: query, schema: { type: string, enum: [pending, delivered, failed, dead] } } ], responses: { '200': { description: OK } } }
+  /integrations/webhooks/{id}/deliveries/{deliveryId}:replay:
+    post: { tags: [integrations], summary: Replay one delivery, parameters: [ { $ref: '#/components/parameters/id' }, { name: deliveryId, in: path, required: true, schema: { type: string, format: uuid } } ], responses: { '202': { description: Queued } } }
+  /integrations/connections:
+    get: { tags: [integrations], summary: Marketplace connections (ecommerce, payment QR, bank feed, e-Tax, messaging), responses: { '200': { description: OK } } }
+    post: { tags: [integrations], summary: Start connection (OAuth redirect URL or credential form), requestBody: { required: true, content: { application/json: { schema: { type: object, required: [provider], properties: { provider: { type: string }, config: { type: object } } } } } }, responses: { '201': { description: Created, content: { application/json: { schema: { type: object, properties: { connectionId: { type: string }, authorizeUrl: { type: string } } } } } } } }
+  /integrations/connections/{id}:sync:
+    post: { tags: [integrations], summary: Pull orders / statement now, parameters: [ { $ref: '#/components/parameters/id' } ], responses: { '202': { description: Queued } } }
+  /integrations/connections/{id}/orders:
+    get: { tags: [integrations], summary: External orders (คำสั่งซื้อจากแพลตฟอร์ม) + linked documents, parameters: [ { $ref: '#/components/parameters/id' } ], responses: { '200': { description: OK } } }
+  /integrations/connections/{id}/orders:convert:
+    post: { tags: [integrations], summary: Convert selected orders → invoices/receipts (idempotent by externalOrderId), parameters: [ { $ref: '#/components/parameters/id' } ], requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { externalOrderIds: { type: array, items: { type: string } }, targetDocType: { type: string, enum: [invoices, receipts] } } } } } }, responses: { '201': { description: Created } } }
+  /integrations/bank-feed/lines:
+    get: { tags: [integrations], summary: Statement lines (unmatched / matched), parameters: [ { name: paymentMethodCode, in: query, schema: { type: string } }, { name: matched, in: query, schema: { type: boolean } } ], responses: { '200': { description: OK } } }
+    post: { tags: [integrations], summary: Import statement (CSV/Excel) when no bank API, requestBody: { content: { multipart/form-data: { schema: { type: object, properties: { paymentMethodCode: { type: string }, file: { type: string, format: binary } } } } } }, responses: { '201': { description: Created } } }
+  /integrations/bank-feed/lines/{id}:match:
+    post: { tags: [integrations], summary: Match to payment / create document from bank line (กระทบยอด), parameters: [ { $ref: '#/components/parameters/id' } ], requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { paymentId: { type: string }, createDocument: { $ref: '#/components/schemas/DocumentInput' } } } } } }, responses: { '200': { description: OK } } }
+  /integrations/inbound/payment/{provider}:
+    post: { tags: [integrations], summary: Payment callback (SCB/BBL/Krungsri QR, ChillPay, Beam, Payso) → record payment + RV, security: [], parameters: [ { name: provider, in: path, required: true, schema: { type: string } } ], responses: { '200': { description: OK } } }
+
+  # ---------- reports (เพิ่มตาม PEAK รวมรายงาน) ----------
+  /reports/aging/ap: { get: { tags: [reports], summary: อายุเจ้าหนี้, parameters: [ { name: asOf, in: query, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } } }
+  /reports/aging/ar: { get: { tags: [reports], summary: อายุลูกหนี้, parameters: [ { name: asOf, in: query, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } } }
+  /reports/cash-flow: { get: { tags: [reports], summary: งบกระแสเงินสด (ทางอ้อม จาก fs_line_item.cash_flow_section), parameters: [ { name: fromDate, in: query, required: true, schema: { type: string, format: date } }, { name: toDate, in: query, required: true, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } } }
+  /reports/working-paper: { get: { tags: [reports], summary: กระดาษทำการ (TB + adjustments → BS/PL columns), parameters: [ { name: fromMonth, in: query, required: true, schema: { type: string } }, { name: toMonth, in: query, required: true, schema: { type: string } } ], responses: { '200': { description: OK } } } }
+  /reports/sales-summary: { get: { tags: [reports], summary: สรุปยอดขายสินค้า/บริการ (by item / customer / revenue account), parameters: [ { name: fromDate, in: query, schema: { type: string, format: date } }, { name: toDate, in: query, schema: { type: string, format: date } }, { name: groupBy, in: query, schema: { type: string, enum: [item, contact, account] } } ], responses: { '200': { description: OK } } } }
+  /reports/cash-movement: { get: { tags: [reports], summary: การเคลื่อนไหวการเงิน (ต่อช่องทาง), parameters: [ { name: paymentMethodCode, in: query, schema: { type: string } }, { name: fromDate, in: query, schema: { type: string, format: date } }, { name: toDate, in: query, schema: { type: string, format: date } } ], responses: { '200': { description: OK } } } }
+  /reports/cheques: { get: { tags: [reports], summary: เช็ครับ / เช็คจ่าย, parameters: [ { name: direction, in: query, schema: { type: string, enum: [in, out] } } ], responses: { '200': { description: OK } } } }
+  /reports/documents/{docType}: { get: { tags: [reports], summary: รายงานเอกสารต่อชนิด (Excel/CSV พร้อมลิงก์กลับเอกสาร), parameters: [ { $ref: '#/components/parameters/docType' }, { name: fromDate, in: query, schema: { type: string, format: date } }, { name: toDate, in: query, schema: { type: string, format: date } }, { name: format, in: query, schema: { type: string, enum: [json, xlsx, csv] } } ], responses: { '200': { description: OK } } } }
+  /reports/favorites: { get: { tags: [reports], summary: รายงานโปรด (pinned), responses: { '200': { description: OK } } }, put: { tags: [reports], summary: Pin/unpin, requestBody: { content: { application/json: { schema: { type: object, properties: { reportKeys: { type: array, items: { type: string } } } } } } }, responses: { '200': { description: OK } } } }
+  /dashboard/smart-insights: { get: { tags: [reports], summary: Smart Insight (เอกสารพ้นกำหนด/ใกล้ครบ ต่อชนิด ตาม policy), responses: { '200': { description: OK } } } }
+
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    code: { name: code, in: path, required: true, schema: { type: string } }
+    id: { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+    docType:
+      name: docType
+      in: path
+      required: true
+      schema:
+        type: string
+        enum: [quotations, temporary-delivery-notes, invoices, delivery-notes, receipts, tax-invoices, credit-notes, billing-notes, debit-notes, deposits,
+               purchase-requisitions, purchase-orders, asset-purchase-orders, expenses, asset-purchases, goods-receipts, invoice-receipts, billing-note-expenses, credit-note-expenses, debit-note-expenses, deposit-expenses,
+               product-requisitions, product-requisition-returns, cost-adjustments, stock-transfers]
+    cursor: { name: cursor, in: query, schema: { type: string } }
+    limit: { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+    taxMonth: { name: month, in: query, required: true, schema: { type: string, pattern: '^[0-9]{6}$' } }
+    idempotency: { name: Idempotency-Key, in: header, schema: { type: string } }
+  responses:
+    Validation: { description: VALIDATION_ERROR, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    BusinessRule: { description: BUSINESS_RULE (WHT_PAYMENT_MISMATCH, OVERPAYMENT, ACCOUNT_NOT_FOUND, DUPLICATE_TAX_INVOICE, ...), content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    NotFound: { description: NOT_FOUND }
+    RateLimit: { description: Too many requests, headers: { Retry-After: { schema: { type: integer } } } }
+  schemas:
+    OrganizationInput:
+      type: object
+      properties: { name: { type: string }, nameEn: { type: string }, businessType: { type: string }, taxNumber: { type: string, pattern: '^[0-9]{13}$' }, branchCode: { type: string }, isVatRegistered: { type: boolean }, vatRegisteredDate: { type: string, format: date }, registeredDate: { type: string, format: date }, addressTh: { type: string }, addressEn: { type: string }, deliveryAddress: { type: string }, phone: { type: string }, email: { type: string }, fax: { type: string }, website: { type: string }, lineId: { type: string }, fiscalYearStartMonth: { type: integer } }
+    AccountingPolicy:
+      type: object
+      description: ค่า default = PEAK จริง (ดู 10 §3.5)
+      properties:
+        debitNoteUnrefAccount: { type: string, default: '113301' }
+        creditNoteUnrefAccount: { type: string, default: '212306' }
+        receivedDebitNoteUnrefAccount: { type: string, default: '212306' }
+        receivedCreditNoteUnrefAccount: { type: string, default: '113301' }
+        grIrClearingAccount: { type: string, default: '212305' }
+        taxInvoiceDefaultDeposit: { type: string, enum: [issue, not_issue, auto], default: issue }
+        taxInvoiceDefaultInvoice: { type: string, enum: [issue, not_issue, auto], default: auto }
+        taxInvoiceDefaultReceipt: { type: string, enum: [issue, not_issue, auto], default: issue }
+        allowTaxInvoiceWithoutVat: { type: boolean, default: false }
+        pp30FileExemptSales: { type: boolean, default: true }
+        pp30SourceDocTypes: { type: array, items: { type: string }, default: [deposit, invoice, receipt, credit_note, debit_note] }
+        defaultPriceType: { type: string, enum: [exclude_tax, include_tax] }
+        allowDuplicateContactName: { type: boolean }
+        allowDuplicateItemName: { type: boolean }
+        reuseVoidedNumber: { type: boolean, default: false }
+        journalCreatorIsApprover: { type: boolean }
+        documentJournalDefaultStatus: { type: string, enum: [draft, await_review, await_approval, approved] }
+        depreciationJournalDefaultStatus: { type: string, enum: [draft, await_review, await_approval, approved] }
+        inventoryMethod: { type: string, enum: [perpetual, periodic] }
+        cogsOnSaleDefault: { type: boolean }
+        useSku: { type: boolean }
+        defaultWarehouseSales: { type: string }
+        defaultWarehousePurchase: { type: string }
+        defaultWarehouseRequisition: { type: string }
+        creditLimitDefaultEnabled: { type: boolean }
+        overLimitQuotation: { type: string, enum: [allow, warn, block] }
+        overLimitDeposit: { type: string, enum: [allow, warn, block] }
+        overLimitInvoice: { type: string, enum: [allow, warn, block] }
+        qoOverAmount: { type: string, enum: [allow, warn, block] }
+        poOverAmount: { type: string, enum: [allow, warn, block] }
+        publicLinkIncome: { type: string, enum: [anyone, org_only] }
+        publicLinkExpense: { type: string, enum: [anyone, org_only] }
+        publicLinkJournal: { type: string, enum: [anyone, org_only] }
+        publicLinkTaxDocs: { type: string, enum: [anyone, org_only] }
+        publicLinkShowSignature: { type: boolean }
+        publicLinkShowStamp: { type: boolean }
+        publicLinkPasswordEnabled: { type: boolean }
+        etaxProvider: { type: string, enum: [inet, leceipt, google_timestamp], nullable: true }
+    NumberRule:
+      type: object
+      required: [docType, series, prefix]
+      properties:
+        docType: { type: string }
+        series: { type: string, enum: [main, tax_invoice, asset] }
+        prefix: { type: string, maxLength: 4, example: IVT }
+        specialChar: { type: string, maxLength: 1, example: '-' }
+        includeYear: { type: boolean, default: true }
+        includeMonth: { type: boolean, default: true }
+        includeDay: { type: boolean, default: false }
+        runningDigits: { type: integer, minimum: 3, maximum: 8, default: 5 }
+        resetPeriod: { type: string, enum: [never, year, month, day], default: month }
+        isSeparateSeries: { type: boolean, default: true }
+        preview: { type: string, readOnly: true, example: IVT-20261100001 }
+    ReceivedTaxInvoiceInput:
+      type: object
+      required: [taxInvoiceNumber, taxInvoiceDate, vatAmount]
+      properties: { taxInvoiceNumber: { type: string }, taxInvoiceDate: { type: string, format: date }, journalDate: { type: string, format: date }, periodMonth: { type: string, pattern: '^[0-9]{6}$', description: เดือนที่ยื่น ภ.พ.30 (≤ +6 เดือน) }, vatAmount: { type: number } }
+    RecurringDocumentInput:
+      type: object
+      required: [docType, name, payload, frequency, startDate]
+      properties: { docType: { type: string }, name: { type: string }, payload: { $ref: '#/components/schemas/DocumentInput' }, frequency: { type: string, enum: [weekly, monthly, quarterly, yearly] }, dayOfPeriod: { type: integer }, startDate: { type: string, format: date }, endDate: { type: string, format: date }, autoApprove: { type: boolean, default: false } }
+    AssetGroupInput:
+      type: object
+      required: [code, name, assetAccount]
+      properties: { code: { type: string }, name: { type: string }, assetAccount: { type: string, example: '124106' }, accumulatedDepreciationAccount: { type: string, example: '124206' }, depreciationExpenseAccount: { type: string, example: '530301' }, method: { type: string, enum: [straight_line, declining_balance, none] }, usefulLifeMonths: { type: integer }, residualRate: { type: number } }
+    FixedAssetInput:
+      type: object
+      required: [assetGroupCode, name, acquiredDate, cost, usefulLifeMonths]
+      properties: { assetGroupCode: { type: string }, code: { type: string }, name: { type: string }, sourceLineId: { type: string, format: uuid }, acquiredDate: { type: string, format: date }, startDepreciationDate: { type: string, format: date }, cost: { type: number }, residualValue: { type: number, default: 1 }, usefulLifeMonths: { type: integer }, method: { type: string, enum: [straight_line, declining_balance, none] } }
+    WebhookEndpointInput:
+      type: object
+      required: [url, eventTypes]
+      properties:
+        url: { type: string, format: uri }
+        eventTypes: { type: array, items: { type: string }, description: 'ครอบคลุม: quotation|purchase_order|receipt.{created,edited,voided}, invoice|expense.{created,edited,voided,paid_payment,void_payment}, product|service|contact.{created,edited}, payment_method.created + ของเรา journal.posted, period.locked, document.approved' }
+        authHeaderName: { type: string, example: x-api-key }
+        authHeaderValue: { type: string }
+        environment: { type: string, enum: [uat, production], default: production }
+    Error:
+      type: object
+      required: [code, message]
+      properties: { code: { type: string }, message: { type: string }, details: { type: array, items: { type: object } } }
+    ActiveStatus: { type: string, enum: [all, active, inactive] }
+    VatType: { type: string, enum: [none, zero, seven], description: 'PEAK 1/2/3' }
+    TaxStatus: { type: string, enum: [exclude_tax, include_tax, non_tax], description: 'PEAK 0/1/2' }
+    DocumentStatus: { type: string, enum: [draft, await_approval, approved, outstanding, overdue, paid, got_receipt, issued_invoice_receipt, already_issued, voided] }
+    ContactType: { type: string, enum: [none, limited_partnership, company_limited, public_company, shop, ordinary_person, body_of_persons, others, ordinary_partnership, foundation, association, joint_venture] }
+    Account:
+      type: object
+      properties: { code: { type: string, pattern: '^[1-59][0-9]{5}$' }, nameTh: { type: string }, nameEn: { type: string }, category: { type: string, enum: [asset, liability, equity, revenue, expense, suspense] } }
+    ContactInput:
+      type: object
+      required: [name, type]
+      properties:
+        code: { type: string }
+        name: { type: string, maxLength: 256 }
+        type: { $ref: '#/components/schemas/ContactType' }
+        prefixNameType: { type: string, enum: [none, khun, mr, mrs, miss, other] }
+        prefixNameOther: { type: string }
+        taxNumber: { type: string, pattern: '^[0-9]{13}$' }
+        branchCode: { type: string, pattern: '^[0-9]{5}$' }
+        address: { type: string }
+        subDistrict: { type: string }
+        district: { type: string }
+        province: { type: string }
+        country: { type: string, default: Thailand }
+        postCode: { type: string }
+        email: { type: string, format: email }
+        callCenterNumber: { type: string }
+        faxNumber: { type: string }
+        website: { type: string }
+        contactFirstName: { type: string }
+        contactLastName: { type: string }
+        contactNickName: { type: string }
+        contactPosition: { type: string }
+        contactPhoneNumber: { type: string }
+        contactEmail: { type: string }
+        purchaseAccount: { type: string }
+        sellAccount: { type: string }
+        bankId: { type: integer }
+        bankAccountNo: { type: string }
+        bankAccountName: { type: string }
+        bankBranch: { type: string }
+    Contact:
+      allOf: [ { $ref: '#/components/schemas/ContactInput' }, { type: object, properties: { id: { type: string, format: uuid }, isActive: { type: boolean }, createdAt: { type: string, format: date-time } } } ]
+    ContactPage: { type: object, properties: { items: { type: array, items: { $ref: '#/components/schemas/Contact' } }, nextCursor: { type: string, nullable: true }, total: { type: integer } } }
+    ItemInput:
+      type: object
+      required: [name, type]
+      properties:
+        code: { type: string }
+        type: { type: string, enum: [product, service] }
+        name: { type: string }
+        description: { type: string }
+        sellValue: { type: number }
+        sellVatType: { $ref: '#/components/schemas/VatType' }
+        sellAccount: { type: string }
+        purchaseValue: { type: number }
+        purchaseVatType: { $ref: '#/components/schemas/VatType' }
+        purchaseAccount: { type: string }
+        unitCode: { type: string }
+        unitNameTh: { type: string }
+        unitNameEn: { type: string }
+        carryingBalanceAmount: { type: number }
+        carryingBalanceValue: { type: number }
+    PaymentMethodInput:
+      type: object
+      required: [name, type]
+      properties:
+        code: { type: string }
+        name: { type: string }
+        type: { type: string, enum: [others, cash, bank_account, credit_card, ewallet] }
+        bankId: { type: integer }
+        bankName: { type: string }
+        accountNumber: { type: string }
+        accountType: { type: string, enum: [current, savings, fixed_deposit] }
+        eWalletId: { type: integer }
+        accountCode: { type: string }
+        isHaveCheque: { type: boolean }
+        carryingBalanceValue: { type: number }
+        memo: { type: string }
+    LineInput:
+      type: object
+      required: [quantity, price, vatType]
+      properties:
+        itemCode: { type: string, description: XOR accountCode }
+        accountCode: { type: string }
+        subAccountCode: { type: string }
+        description: { type: string }
+        isDescriptionOnly: { type: boolean, default: false }
+        quantity: { type: number }
+        price: { type: number }
+        discount: { type: string, description: '"100" or "5%"' }
+        vatType: { $ref: '#/components/schemas/VatType' }
+        whtAmount: { type: number }
+        whtRate: { type: number, description: 'optional helper: 0.03 → computes whtAmount' }
+    PaymentInput:
+      type: object
+      required: [paymentMethodCode, amount]
+      properties:
+        paymentMethodCode: { type: string }
+        accountCode: { type: string }
+        paymentDate: { type: string, format: date }
+        amount: { type: number, description: 'net − wht' }
+        whtAmount: { type: number }
+        note: { type: string }
+        cheque:
+          type: object
+          properties: { no: { type: string }, date: { type: string, format: date }, bankId: { type: integer }, branchNo: { type: string }, accountNo: { type: string }, amount: { type: number } }
+    ReceivedTaxInvoice:
+      type: object
+      required: [taxInvoiceNumber, taxInvoiceDate, journalDate]
+      properties:
+        taxInvoiceNumber: { type: string }
+        taxInvoiceDate: { type: string, format: date }
+        journalDate: { type: string, format: date }
+        periodDate: { type: string, format: date, description: 1st of VAT month; ≤ +6 months }
+    DocumentInput:
+      type: object
+      required: [issuedDate, lines]
+      properties:
+        code: { type: string }
+        contactCode: { type: string }
+        contactId: { type: string, format: uuid }
+        issuedDate: { type: string, format: date }
+        dueDate: { type: string, format: date }
+        reference: { type: string, maxLength: 32 }
+        remark: { type: string }
+        status: { type: string, enum: [draft, approve], default: draft }
+        currency: { type: string, default: THB }
+        exchangeRate: { type: number, default: 1 }
+        taxStatus: { $ref: '#/components/schemas/TaxStatus' }
+        isTaxInvoice: { type: boolean }
+        discountTotal: { type: string }
+        lines: { type: array, items: { $ref: '#/components/schemas/LineInput' } }
+        payment: { $ref: '#/components/schemas/PaymentInput' }
+        receivedTaxInvoice: { $ref: '#/components/schemas/ReceivedTaxInvoice' }
+        # credit note
+        sourceDocumentCode: { type: string }
+        reasonType: { type: string, enum: [none, promotion_marketing, office_use, production_use, service_use, donation, damage_or_loss, others] }
+        reasonDescription: { type: string }
+        goodsReturn: { type: boolean }
+        returnPayment: { $ref: '#/components/schemas/PaymentInput' }
+        # billing note
+        bundle: { type: array, items: { type: object, properties: { code: { type: string }, amount: { type: number } } } }
+        # deposit draw-down
+        depositCodes: { type: array, items: { type: string } }
+        tags: { type: array, items: { type: string } }
+    Document:
+      allOf:
+        - { $ref: '#/components/schemas/DocumentInput' }
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+            docType: { type: string }
+            contact: { type: object, properties: { id: { type: string }, code: { type: string }, name: { type: string } } }
+            status: { $ref: '#/components/schemas/DocumentStatus' }
+            isVoid: { type: boolean }
+            preTaxAmount: { type: number }
+            vatAmount: { type: number }
+            netAmount: { type: number }
+            whtAmount: { type: number }
+            paidAmount: { type: number }
+            remainAmount: { type: number }
+            payments: { type: array, items: { type: object } }
+            journals: { type: array, items: { type: object, properties: { id: { type: string }, code: { type: string } } } }
+            documentLink: { type: string, format: uri }
+            pdfUrl: { type: string, format: uri }
+    DocumentPage: { type: object, properties: { items: { type: array, items: { $ref: '#/components/schemas/Document' } }, nextCursor: { type: string, nullable: true }, total: { type: integer } } }
+    JournalInput:
+      type: object
+      required: [issuedDate, journalType, description, entries]
+      properties:
+        code: { type: string }
+        issuedDate: { type: string, format: date }
+        journalType: { type: string, enum: [purchase, sales, payment, receive, general] }
+        description: { type: string }
+        contactCode: { type: string }
+        entries:
+          type: array
+          minItems: 2
+          items:
+            type: object
+            required: [accountCode]
+            properties: { accountCode: { type: string }, subAccountCode: { type: string }, description: { type: string }, debit: { type: number, default: 0 }, credit: { type: number, default: 0 } }
+    TrialBalance:
+      type: object
+      properties:
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              accountCode: { type: string }
+              accountName: { type: string }
+              subAccountCode: { type: string, nullable: true }
+              beginningBalance: { $ref: '#/components/schemas/DrCr' }
+              change: { $ref: '#/components/schemas/DrCr' }
+              endingBalance: { $ref: '#/components/schemas/DrCr' }
+        summary: { type: object, properties: { beginningBalance: { $ref: '#/components/schemas/DrCr' }, change: { $ref: '#/components/schemas/DrCr' }, endingBalance: { $ref: '#/components/schemas/DrCr' } } }
+    DrCr: { type: object, properties: { debit: { type: number }, credit: { type: number } } }

@@ -1,0 +1,39 @@
+code,statement,section,sort_order,name_th,name_en
+BS-A-01,BS,current_asset,1,เงินสดและรายการเทียบเท่าเงินสด,Cash and cash equivalents
+BS-A-02,BS,current_asset,2,เงินลงทุนชั่วคราว,Short-term investments
+BS-A-03,BS,current_asset,3,ลูกหนี้การค้าและลูกหนี้หมุนเวียนอื่น,Trade and other current receivables
+BS-A-04,BS,current_asset,4,เงินให้กู้ยืมระยะสั้น,Short-term loans
+BS-A-05,BS,current_asset,5,สินค้าคงเหลือ,Inventories
+BS-A-06,BS,current_asset,6,สินทรัพย์หมุนเวียนอื่น,Other current assets
+BS-A-07,BS,current_asset,7,สินทรัพย์ไม่หมุนเวียนที่ถือไว้เพื่อขาย,Non-current assets held for sale
+BS-A-11,BS,non_current_asset,11,เงินลงทุนระยะยาว,Long-term investments
+BS-A-12,BS,non_current_asset,12,เงินให้กู้ยืมระยะยาว,Long-term loans
+BS-A-13,BS,non_current_asset,13,อสังหาริมทรัพย์เพื่อการลงทุน,Investment property
+BS-A-14,BS,non_current_asset,14,ที่ดิน อาคารและอุปกรณ์,"Property, plant and equipment"
+BS-A-15,BS,non_current_asset,15,สินทรัพย์ไม่มีตัวตน,Intangible assets
+BS-A-16,BS,non_current_asset,16,สินทรัพย์ไม่หมุนเวียนอื่น,Other non-current assets
+BS-L-01,BS,current_liability,21,เงินเบิกเกินบัญชีและเงินกู้ยืมระยะสั้นจากสถาบันการเงิน,Bank overdrafts and short-term borrowings from financial institutions
+BS-L-02,BS,current_liability,22,เจ้าหนี้การค้าและเจ้าหนี้หมุนเวียนอื่น,Trade and other current payables
+BS-L-03,BS,current_liability,23,ส่วนของหนี้สินระยะยาวที่ถึงกำหนดชำระภายในหนึ่งปี,Current portion of long-term liabilities
+BS-L-04,BS,current_liability,24,เงินกู้ยืมระยะสั้น,Short-term borrowings
+BS-L-05,BS,current_liability,25,ภาษีเงินได้ค้างจ่าย,Income tax payable
+BS-L-06,BS,current_liability,26,ประมาณการหนี้สินระยะสั้น,Short-term provisions
+BS-L-07,BS,current_liability,27,หนี้สินหมุนเวียนอื่น,Other current liabilities
+BS-L-11,BS,non_current_liability,31,เงินกู้ยืมระยะยาว,Long-term borrowings
+BS-L-12,BS,non_current_liability,32,ประมาณการหนี้สินไม่หมุนเวียนสำหรับผลประโยชน์พนักงาน,Non-current provisions for employee benefits
+BS-L-13,BS,non_current_liability,33,ประมาณการหนี้สินไม่หมุนเวียนอื่น,Other non-current provisions
+BS-L-14,BS,non_current_liability,34,หนี้สินไม่หมุนเวียนอื่น,Other non-current liabilities
+BS-E-01,BS,equity,41,ทุนเรือนหุ้น,Share capital
+BS-E-02,BS,equity,42,ส่วนเกิน (ต่ำกว่า) มูลค่าหุ้น,Share premium (discount)
+BS-E-03,BS,equity,43,กำไรสะสม - จัดสรรแล้ว,Retained earnings - appropriated
+BS-E-04,BS,equity,44,กำไรสะสม - ยังไม่ได้จัดสรร,Retained earnings - unappropriated
+BS-E-05,BS,equity,45,องค์ประกอบอื่นของส่วนของเจ้าของ,Other components of equity
+PL-01,PL,revenue,1,รายได้จากการขายหรือการให้บริการ,Revenue from sales or services
+PL-02,PL,revenue,2,รายได้อื่น,Other income
+PL-03,PL,expense,3,ต้นทุนขายหรือต้นทุนการให้บริการ,Cost of sales or services
+PL-04,PL,expense,4,ค่าใช้จ่ายในการขาย,Selling expenses
+PL-05,PL,expense,5,ค่าใช้จ่ายในการบริหาร,Administrative expenses
+PL-06,PL,expense,6,ค่าใช้จ่ายอื่น,Other expenses
+PL-07,PL,finance_cost,7,ต้นทุนทางการเงิน,Finance costs
+PL-08,PL,income_tax,8,ภาษีเงินได้,Income tax expense
+NONE,NONE,suspense,99,ไม่แสดงในงบ (ต้องเป็นศูนย์ ณ วันปิดงวด),Not presented (must be zero at period end)

@@ -1,0 +1,265 @@
+code,name_th,name_en,category,normal_balance,is_contra,fs_line_item,is_current,tax_kind,tax_form,cit_deductible,group2,group4
+111101,เงินสด,Cash,asset,debit,False,BS-A-01,True,,,,11,1111
+111201,ธนาคาร - บัญชีกระแสรายวัน,Current accounts,asset,debit,False,BS-A-01,True,,,,11,1112
+111301,ธนาคาร - บัญชีออมทรัพย์,Saving accounts,asset,debit,False,BS-A-01,True,,,,11,1113
+111401,เช็ครับที่ครบกำหนดแต่ยังมิได้ฝาก,Uncashed cheques,asset,debit,False,BS-A-01,True,,,,11,1114
+111501,กระเป๋าเงินอิเล็กทรอนิกส์,e-Wallet,asset,debit,False,BS-A-01,True,,,,11,1115
+112101,ธนาคาร - ฝากประจำ,Fixed deposites,asset,debit,False,BS-A-02,True,,,,11,1121
+112201,เงินลงทุนชั่วคราวอื่น,Other short-term investments,asset,debit,False,BS-A-02,True,,,,11,1122
+113101,ลูกหนี้การค้า,Accounts receivable,asset,debit,False,BS-A-03,True,,,,11,1131
+113102,เช็ครับลงวันที่ล่วงหน้า,Cheques received in advance,asset,debit,False,BS-A-03,True,,,,11,1131
+113103,ค่าเผื่อหนี้สงสัยจะสูญ,Allowances for doubtful accounts,asset,credit,True,BS-A-03,True,,,,11,1131
+113201,เงินให้กู้ยืม-บุคคลที่เกี่ยวข้องกัน,Short-term lendings to related parties,asset,debit,False,BS-A-04,True,,,,11,1132
+113202,เงินให้กู้ยืม-บุคคลอื่น,Short-term lendings to others,asset,debit,False,BS-A-04,True,,,,11,1132
+113203,เงินรับล่วงหน้าที่พนักงาน,Cash received at employee,asset,debit,False,BS-A-04,True,,,,11,1132
+113301,ลูกหนี้อื่น,Other receivables,asset,debit,False,BS-A-03,True,,,,11,1133
+114101,วัตถุดิบคงเหลือ,Raw materials,asset,debit,False,BS-A-05,True,,,,11,1141
+114102,สินค้าสำเร็จรูป,Finished goods,asset,debit,False,BS-A-05,True,,,,11,1141
+114103,งานระหว่างทำ,Work-in-process,asset,debit,False,BS-A-05,True,,,,11,1141
+115101,ค่าใช้จ่ายจ่ายล่วงหน้า - ค่าสินค้า,Advance payments - inventory,asset,debit,False,BS-A-06,True,,,,11,1151
+115102,ค่าใช้จ่ายจ่ายล่วงหน้า - ค่าเช่า,Prepaid expenses - rental,asset,debit,False,BS-A-06,True,,,,11,1151
+115103,ค่าใช้จ่ายจ่ายล่วงหน้า - อื่น,Prepaid expenses - others,asset,debit,False,BS-A-06,True,,,,11,1151
+115104,เงินจ่ายล่วงหน้า - เงินมัดจำ,Prepayment - Deposit,asset,debit,False,BS-A-06,True,,,,11,1151
+115105,เงินจ่ายล่วงหน้า - เงินประกัน,Prepayment - Retention,asset,debit,False,BS-A-06,True,,,,11,1151
+115201,เงินทดรองจ่ายพนักงาน,Advance payments to employee,asset,debit,False,BS-A-03,True,,,,11,1152
+115301,ดอกเบี้ยค้างรับ,Accrued interest income,asset,debit,False,BS-A-03,True,,,,11,1153
+115302,รายได้ค้างรับอื่น,Accrued revenue - others,asset,debit,False,BS-A-03,True,,,,11,1153
+115401,ภาษีซื้อ,Purchasing taxes,asset,debit,False,BS-A-06,True,vat_input,PP30,,11,1154
+115402,ภาษีซื้อยังไม่ถึงกำหนด,Suspense purchasing taxes,asset,debit,False,BS-A-06,True,vat_input_pending,PP30,,11,1154
+115403,ภาษีถูกหัก ณ ที่จ่าย,Withheld taxes,asset,debit,False,BS-A-06,True,wht_receivable,PND50,,11,1154
+115404,ภาษีเงินได้ครึ่งปี,Prepaid income taxes,asset,debit,False,BS-A-06,True,cit_prepaid,PND51,,11,1154
+115405,ลูกหนี้สรรพากร,Tax returns receivable,asset,debit,False,BS-A-06,True,,,,11,1154
+115451,เครดิต ภ.พ.30 ที่ชำระเกินรอนำไปใช้,Excess PP30 VAT payment carry forward,asset,debit,False,BS-A-06,True,vat_credit_carry,PP30,,11,1154
+115452,ลูกหนี้สรรพากร ภ.พ.30 รอรับคืนจากการขอคืน,PP30 VAT Receivable ,asset,debit,False,BS-A-06,True,vat_refund_receivable,PP30,,11,1154
+121101,เงินลงทุนเผื่อขาย,Long-term investments - avaiable for sale,asset,debit,False,BS-A-11,False,,,,12,1211
+121102,เงินลงทุนในบริษัทร่วม,Investments in associates,asset,debit,False,BS-A-11,False,,,,12,1211
+121103,เงินลงทุนในบริษัทย่อย,Investments in subsidiaries,asset,debit,False,BS-A-11,False,,,,12,1211
+121104,เงินลงทุนในการร่วมค้า,Investments in joint ventures,asset,debit,False,BS-A-11,False,,,,12,1211
+121105,เงินลงทุนระยะยาวอื่น,Long-term investments - others,asset,debit,False,BS-A-11,False,,,,12,1211
+122101,เงินให้กู้ยืมระยะยาวแก่บุคคลที่เกี่ยวข้องกัน,Long-term lendings to related parties,asset,debit,False,BS-A-12,False,,,,12,1221
+122102,เงินให้กู้ยืมระยะยาวแก่บุคคลอื่น,Long-term lendings to others,asset,debit,False,BS-A-12,False,,,,12,1221
+123101,อสังหาริมทรัพย์เพื่อการลงทุน,Investments - properties,asset,debit,False,BS-A-13,False,,,,12,1231
+123201,สินทรัพย์ไม่หมุนเวียนที่ถือไว้เพื่อขาย,Non-current assets held for sale and discontinued operations,asset,debit,False,BS-A-07,True,,,,12,1232
+124101,ที่ดิน,Lands,asset,debit,False,BS-A-14,False,,,,12,1241
+124102,งานระหว่างก่อสร้าง,Construction in progress,asset,debit,False,BS-A-14,False,,,,12,1241
+124103,อาคาร,Buildings,asset,debit,False,BS-A-14,False,,,,12,1241
+124104,ส่วนปรับปรุงอาคาร,Building improvements,asset,debit,False,BS-A-14,False,,,,12,1241
+124105,เครื่องจักร และอุปกรณ์,Machineries,asset,debit,False,BS-A-14,False,,,,12,1241
+124106,อุปกรณ์สำนักงาน,Office equipments,asset,debit,False,BS-A-14,False,,,,12,1241
+124107,เครื่องตกแต่งสำนักงาน,Furnitures and fixtures,asset,debit,False,BS-A-14,False,,,,12,1241
+124108,ยานพาหนะ,Vehicles,asset,debit,False,BS-A-14,False,,,,12,1241
+124203,ค่าเสื่อมราคาสะสม - อาคาร,Accumulated depreciations - buildings,asset,credit,True,BS-A-14,False,,,,12,1242
+124204,ค่าเสื่อมราคาสะสม - ส่วนปรับปรุงอาคาร,Accumulated depreciation - building improvements,asset,credit,True,BS-A-14,False,,,,12,1242
+124205,ค่าเสื่อมราคาสะสม - เครื่องจักร,Accumulated depreciations - machineries,asset,credit,True,BS-A-14,False,,,,12,1242
+124206,ค่าเสื่อมราคาสะสม - อุปกรณ์สำนักงาน,Accumulated depreciations - equipments,asset,credit,True,BS-A-14,False,,,,12,1242
+124207,ค่าเสื่อมราคาสะสม - เครื่องตกแต่งสำนักงาน,Accumulated depreciations - furnitures and fixtures,asset,credit,True,BS-A-14,False,,,,12,1242
+124208,ค่าเสื่อมราคาสะสม - ยานพาหนะ,Accumulated depreciations - vehicles,asset,credit,True,BS-A-14,False,,,,12,1242
+125101,ซอฟต์แวร์,Softwares,asset,debit,False,BS-A-15,False,,,,12,1251
+125102,สิทธิการเช่าหรือใช้ทรัพย์สิน,Leasehold rights,asset,debit,False,BS-A-15,False,,,,12,1251
+125103,สินทรัพย์ไม่มีตัวตนอื่น,Other intangible assets,asset,debit,False,BS-A-15,False,,,,12,1251
+125201,ค่าตัดจำหน่ายสะสม - ซอฟต์แวร์,Accumulated amortization - softwares,asset,credit,True,BS-A-15,False,,,,12,1252
+125202,ค่าตัดจำหน่ายสะสม - สิทธิการเช่าหรือใช้ทรัพย์สิน,Accumulated amortization - leasehold rights,asset,credit,True,BS-A-15,False,,,,12,1252
+125203,ค่าตัดจำหน่ายสะสม - สินทรัพย์ไม่มีตัวตนอื่น,Accumulated amortization - other intangible assets,asset,credit,True,BS-A-15,False,,,,12,1252
+126101,สินทรัพย์ไม่หมุนเวียนอื่น,Other non-current assets,asset,debit,False,BS-A-16,False,,,,12,1261
+211101,เงินเบิกเกินบัญชีธนาคาร,Bank overdraft,liability,credit,False,BS-L-01,True,,,,21,2111
+211201,เงินกู้ยืมระยะสั้นธนาคารไม่มีหลักประกัน ,Short-term unsecured loans from bank,liability,credit,False,BS-L-01,True,,,,21,2112
+211301,เงินกู้ยืมระยะสั้นธนาคารมีหลักประกัน,Short-term secured loans from bank,liability,credit,False,BS-L-01,True,,,,21,2113
+212101,เจ้าหนี้การค้า,Accounts payable,liability,credit,False,BS-L-02,True,,,,21,2121
+212102,เช็คจ่าย,Cheques payable,liability,credit,False,BS-L-02,True,,,,21,2121
+212103,รายได้รับล่วงหน้า,Unearned Revenue,liability,credit,False,BS-L-02,True,,,,21,2121
+212104,เงินรับล่วงหน้า - เงินมัดจำ,Unearned - Deposit,liability,credit,False,BS-L-02,True,,,,21,2121
+212105,เงินรับล่วงหน้า - เงินประกัน,Unearned - Retention,liability,credit,False,BS-L-02,True,,,,21,2121
+212201,เงินกู้ยืมระยะสั้นจากบุคคลที่เกี่ยวข้องกัน,Short-term loans from related parties,liability,credit,False,BS-L-04,True,,,,21,2122
+212202,เงินกู้ยืมระยะสั้นจากบุคคลอื่น,Short-term loans from others,liability,credit,False,BS-L-04,True,,,,21,2122
+212203,สำรองจ่ายแทนกิจการที่ยังไม่ได้คืนเงิน,Await reimburse expenses,liability,credit,False,BS-L-04,True,,,,21,2122
+212301,เงินเดือนค้างจ่าย,Accrued salary,liability,credit,False,BS-L-02,True,,,,21,2123
+212302,กองทุนสำรองเลี้ยงชีพค้างจ่าย,Provident fund payable,liability,credit,False,BS-L-02,True,,,,21,2123
+212303,ค่าสอบบัญชีค้างจ่าย,Accrued audit fee,liability,credit,False,BS-L-02,True,,,,21,2123
+212304,ค่าทำบัญชีค้างจ่าย,Accrued accounting fee,liability,credit,False,BS-L-02,True,,,,21,2123
+212305,ค่าใช้จ่ายค้างจ่ายอื่น,Accrued expense - others,liability,credit,False,BS-L-02,True,,,,21,2123
+212306,เจ้าหนี้อื่น,Other payables,liability,credit,False,BS-L-02,True,,,,21,2123
+212307,เจ้าหนี้เช่าซื้อ,Leasing payables,liability,credit,False,BS-L-02,True,,,,21,2123
+212401,กองทุนสงเคราะห์ลูกจ้างค้างจ่าย,Employee welfare fund payable,liability,credit,False,BS-L-02,True,ewf_payable,EWF,,21,2124
+213101,เงินกู้ยืมระยะยาวที่ถึงกำหนดชำระภายในหนึ่งปี,Current portion of long-term loans,liability,credit,False,BS-L-03,True,,,,21,2131
+213102,ส่วนของหนี้สินตามสัญญาเช่าเงินทุนที่ถึงกำหนดชำระภายในหนึ่งปี,Current portion of finance lease liabilities,liability,credit,False,BS-L-03,True,,,,21,2131
+214101,ประมาณการหนี้สินระยะสั้น,Estimated short-term liability,liability,credit,False,BS-L-06,True,,,,21,2141
+215101,ภาษีขาย ภ.พ.30,Sales tax payable (PP30),liability,credit,False,BS-L-07,True,vat_output,PP30,,21,2151
+215102,ภาษีขายรอเรียกเก็บ,Suspense sales tax,liability,credit,False,BS-L-07,True,vat_output_pending,PP30,,21,2151
+215103,ภ.พ.36 ค้างจ่าย,PP36 payable,liability,credit,False,BS-L-07,True,vat_reverse_charge,PP36,,21,2151
+215201,ภ.ง.ด. 1 ค้างจ่าย,Withholding tax payable (PND1),liability,credit,False,BS-L-07,True,wht_payable,PND1,,21,2152
+215202,ภ.ง.ด. 2 ค้างจ่าย,Withholding tax payable (PND2),liability,credit,False,BS-L-07,True,wht_payable,PND2,,21,2152
+215203,ภ.ง.ด. 3 ค้างจ่าย,Withholding tax payable (PND3),liability,credit,False,BS-L-07,True,wht_payable,PND3,,21,2152
+215204,ภ.ง.ด. 53 ค้างจ่าย,Withholding tax payable (PND53),liability,credit,False,BS-L-07,True,wht_payable,PND53,,21,2152
+215205,ภ.ง.ด. 54 ค้างจ่าย,Withholding tax payable (PND54),liability,credit,False,BS-L-07,True,wht_payable,PND54,,21,2152
+215301,ภาษีเงินได้นิติบุคคลค้างจ่าย,Income tax payable,liability,credit,False,BS-L-05,True,cit_payable,PND50,,21,2153
+215302,เจ้าหนี้สรรพากร,Payable to Revenue Department,liability,credit,False,BS-L-07,True,tax_payable_other,,,21,2153
+215351,เจ้าหนี้สรรพากร ภ.พ.30 รอชำระ,PP30 VAT Payable,liability,credit,False,BS-L-07,True,vat_payable,PP30,,21,2153
+215352,เจ้าหนี้สรรพากร ภ.ง.ด. 1 รอชำระ,Filed PND1 Payable,liability,credit,False,BS-L-07,True,wht_payable,PND1,,21,2153
+215353,เจ้าหนี้สรรพากร ภ.ง.ด. 2 รอชำระ,Filed PND2 Payable,liability,credit,False,BS-L-07,True,wht_payable,PND2,,21,2153
+215354,เจ้าหนี้สรรพากร ภ.ง.ด. 3 รอชำระ,Filed PND3 Payable,liability,credit,False,BS-L-07,True,wht_payable,PND3,,21,2153
+215355,เจ้าหนี้สรรพากร ภ.ง.ด. 53 รอชำระ,Filed PND53 Payable,liability,credit,False,BS-L-07,True,wht_payable,PND53,,21,2153
+215401,ภ.ธ. 40 ค้างจ่าย,Special business tax payable (PT40),liability,credit,False,BS-L-07,True,sbt_payable,PT40,,21,2154
+215501,ประกันสังคมค้างจ่าย,Social security contribution payables,liability,credit,False,BS-L-07,True,sso_payable,SSO,,21,2155
+216101,ดอกเบี้ยค้างจ่าย,Accrued interest expenses,liability,credit,False,BS-L-07,True,,,,21,2161
+216102,หนี้สินหมุนเวียนอื่น,Other current liability,liability,credit,False,BS-L-07,True,,,,21,2161
+221101,เงินกู้ยืมระยะยาวจากธนาคาร,Long-term loan from bank,liability,credit,False,BS-L-11,False,,,,22,2211
+221102,เงินกู้ยืมระยะยาวจากบุคคลที่เกี่ยวข้องกัน,Long-term loan from related parties,liability,credit,False,BS-L-11,False,,,,22,2211
+221103,เงินกู้ยืมระยะยาวจากบุคคลอื่น,Long-term loan from others,liability,credit,False,BS-L-11,False,,,,22,2211
+221104,หนี้สินตามสัญญาเช่าเงินทุน,Finance lease liabilities,liability,credit,False,BS-L-11,False,,,,22,2211
+222101,ประมาณการหนี้สินผลประโยชน์พนักงาน,Provision for employee benefit,liability,credit,False,BS-L-12,False,,,,22,2221
+222102,ประมาณการหนี้สินระยะยาวอื่น,Other estimated long - term liability,liability,credit,False,BS-L-13,False,,,,22,2221
+223101,หนี้สินไม่หมุนเวียนอื่น,Other non - current liability,liability,credit,False,BS-L-14,False,,,,22,2231
+311000,หุ้นสามัญ,Ordinary shares,equity,credit,False,BS-E-01,False,,,,31,3110
+312000,ส่วนเกินมูลค่าหุ้นสามัญ,Share premium account - ordinary shares,equity,credit,False,BS-E-02,False,,,,31,3120
+313000,หุ้นบุริมสิทธิ,Preference shares,equity,credit,False,BS-E-01,False,,,,31,3130
+314000,ส่วนเกินมูลค่าหุ้นบุริมสิทธิ,Share premium account - preference shares,equity,credit,False,BS-E-02,False,,,,31,3140
+321000,สำรองตามกฎหมาย,Legal reserve ,equity,credit,False,BS-E-03,False,,,,32,3210
+322000,สำรองอื่น,Other reserve,equity,credit,False,BS-E-03,False,,,,32,3220
+330000,กำไร(ขาดทุน)สะสม,Retained earnings,equity,credit,False,BS-E-04,False,,,,33,3300
+331000,เงินปันผล,Dividends,equity,debit,True,BS-E-04,False,,,,33,3310
+332000,ผลกระทบของการเปลี่ยนแปลงนโยบายการบัญชี,Financial effects of changes in accounting policies,equity,credit,False,BS-E-04,False,,,,33,3320
+333000,ผลสะสมจากการแก้ไขข้อผิดพลาดทางการบัญชี,Financial effects of corrections of accounting errors,equity,credit,False,BS-E-04,False,,,,33,3330
+341000,ผลต่างของอัตราแลกเปลี่ยนจากการแปลงค่างบการเงิน,Exchange difference on translating financial statements,equity,credit,False,BS-E-05,False,,,,34,3410
+342000,ผลกำไร (ขาดทุน) จากการวัดมูลค่าเงินลงทุนเผื่อขาย,Gains (losses) on remeasuring available-for-sale investments,equity,credit,False,BS-E-05,False,,,,34,3420
+343000,ผลกำไร (ขาดทุน) ที่ยังไม่เกิดขึ้นจริงอื่น,Other unrealized gains (losses),equity,credit,False,BS-E-05,False,,,,34,3430
+344000,องค์ประกอบอื่นของส่วนของผู้ถือหุ้น อื่นๆ,Other components of shareholders equity - Others,equity,credit,False,BS-E-05,False,,,,34,3440
+410101,รายได้จากการขายสินค้า,Sales from product,revenue,credit,False,PL-01,,,,,41,4101
+410201,รายได้จากการให้บริการ,Sales from service,revenue,credit,False,PL-01,,,,,41,4102
+410301,รับคืน,Sales returns,revenue,debit,True,PL-01,,,,,41,4103
+410302,ส่วนลดจ่าย,Sales discounts,revenue,debit,True,PL-01,,,,,41,4103
+410401,รายได้ค่าก่อสร้าง,Contract revenue,revenue,credit,False,PL-01,,,,,41,4104
+420101,กำไรจากการจำหน่ายสินทรัพย์,Gains on disposal of property,revenue,credit,False,PL-02,,,,,42,4201
+420102,กำไรจากอัตราแลกเปลี่ยนที่ยังไม่รับรู้,Unrealized gain on foreign exchange rate,revenue,credit,False,PL-02,,,,,42,4201
+420103,กำไรจากอัตราแลกเปลี่ยน,Gains on foreign exchange,revenue,credit,False,PL-02,,,,,42,4201
+420104,ดอกเบี้ยรับ,Interest income,revenue,credit,False,PL-02,,,,,42,4201
+420105,เงินปันผลหรือส่วนแบ่งกำไร,Dividend income,revenue,credit,False,PL-02,,,,,42,4201
+420106,เงินชดเชยค่าภาษีอากร,Tax compensation,revenue,credit,False,PL-02,,,,,42,4201
+420107,เงินรางวัล หรือ เงินสนับสนุน ,Awards and grants,revenue,credit,False,PL-02,,,,,42,4201
+420108,รายได้อื่น,Other revenue,revenue,credit,False,PL-02,,,,,42,4201
+510101,ต้นทุนผลิตสินค้า,Production cost,expense,debit,False,PL-03,,,,full,51,5101
+510102,ค่าเสื่อมราคา - เครื่องจักร,Depreciation - machineries,expense,debit,False,PL-03,,,,full,51,5101
+510103,ต้นทุนขายสินค้า,Cost of goods sold,expense,debit,False,PL-03,,,,full,51,5101
+510104,ต้นทุนการให้บริการ,Cost of service provided,expense,debit,False,PL-03,,,,full,51,5101
+510105,ค่าลิขสิทธิ์ กู๊ดวิลล์,Licenses and goodwills,expense,debit,False,PL-03,,,,full,51,5101
+510106,ค่าประกันภัยสินค้า,Insurance,expense,debit,False,PL-03,,,,full,51,5101
+510107,ค่าขนส่งสินค้า,Freight,expense,debit,False,PL-03,,,,full,51,5101
+510108,ค่าอากรขาเข้า,Import duty,expense,debit,False,PL-03,,,,full,51,5101
+510109,ค่าใช้จ่ายอื่นๆในการซื้อสินค้า,Other purchasing cost,expense,debit,False,PL-03,,,,full,51,5101
+510201,ต้นทุนการก่อสร้าง,Contract cost,expense,debit,False,PL-03,,,,full,51,5102
+510301,ส่วนลดรับ,Purchase Discount,expense,credit,True,PL-03,,,,full,51,5103
+520101,ค่านายหน้า ส่วนแบ่งการขาย,Sales commission,expense,debit,False,PL-04,,,,full,52,5201
+520102,โบนัสจากยอดขาย,Bonus on sales,expense,debit,False,PL-04,,,,full,52,5201
+520201,ค่าโฆษณา Google Adwords,Advertising expenses - Google Adwords,expense,debit,False,PL-04,,,,full,52,5202
+520202,ค่าโฆษณา Facebook Ads,Advertising expenses - Facebook Ads,expense,debit,False,PL-04,,,,full,52,5202
+520203,ค่าโฆษณาออนไลน์อื่น,Advertising expenses - other online advertisement,expense,debit,False,PL-04,,,,full,52,5202
+520204,ค่าโฆษณาวิทยุ,Advertising expenses - radio,expense,debit,False,PL-04,,,,full,52,5202
+520205,ค่าโฆษณาโทรทัศน์,Advertising expenses - television,expense,debit,False,PL-04,,,,full,52,5202
+520206,ค่าโฆษณาสิ่งพิมพ์,Advertising expenses - publishing,expense,debit,False,PL-04,,,,full,52,5202
+520207,ค่าโฆษณาสื่อนอกบ้าน,Advertising expenses - out of home media,expense,debit,False,PL-04,,,,full,52,5202
+520208,ค่าจ้างบริการเว็บไซต์,Website development and maintenance cost,expense,debit,False,PL-04,,,,full,52,5202
+520209,ค่าจ้างทำ SEO,SEO service expenses,expense,debit,False,PL-04,,,,full,52,5202
+520210,ค่าจ้างผลิตสื่อโฆษณา,Advertising media production cost,expense,debit,False,PL-04,,,,full,52,5202
+520211,ค่าจ้างที่ปรึกษาการตลาด,Marketing consulting service expenses,expense,debit,False,PL-04,,,,full,52,5202
+520212,รางวัลในการประกวดแข่งขัน ชิงโชค,Prize or reward expenses,expense,debit,False,PL-04,,,,full,52,5202
+520213,ค่าส่งเสริมการขาย,Sales promotions,expense,debit,False,PL-04,,,,full,52,5202
+520214,ค่าสินค้าตัวอย่าง,Sample goods expenses,expense,debit,False,PL-04,,,,full,52,5202
+520215,ค่าใช้จ่ายเกี่ยวกับบูท,Space rental and event related expenses,expense,debit,False,PL-04,,,,full,52,5202
+520216,ค่าจ้างงานบุคคลงานอิเวนต์,Event worker expenses,expense,debit,False,PL-04,,,,full,52,5202
+520217,ค่าจ้างนักแสดงสาธารณะ,Celebrity hiring expenses,expense,debit,False,PL-04,,,,full,52,5202
+520218,ค่าโฆษณาอื่นๆ,Other advertising expenses,expense,debit,False,PL-04,,,,full,52,5202
+520301,ค่าเดินทางในประเทศ,Transportation expenses - national,expense,debit,False,PL-04,,,,full,52,5203
+520302,ค่าเดินทางต่างประเทศ,Transportation expenses - international,expense,debit,False,PL-04,,,,full,52,5203
+520303,ค่าน้ำมัน,Gasoline expenses,expense,debit,False,PL-04,,,,full,52,5203
+520304,ค่าที่พัก,Accommodation expenses,expense,debit,False,PL-04,,,,full,52,5203
+520305,ค่าเบี้ยเลี้ยงเดินทาง,Travel allowance expenses,expense,debit,False,PL-04,,,,full,52,5203
+520306,ค่าโทรศัพท์ฝ่ายขาย,Sales communication expenses,expense,debit,False,PL-04,,,,full,52,5203
+520307,ค่ารับรอง,Entertainment and gift expenses,expense,debit,False,PL-04,,,,limited,52,5203
+520308,หนี้สงสัยจะสูญ,Doubtful debts,expense,debit,False,PL-04,,,,limited,52,5203
+520309,หนี้สูญ,Bad debts,expense,debit,False,PL-04,,,,limited,52,5203
+520401,ค่าขนส่งสินค้าขาย,Freight on Sales,expense,debit,False,PL-04,,,,full,52,5204
+530101,เงินเดือน ค่าจ้าง,Wages and salary,expense,debit,False,PL-05,,,,full,53,5301
+530102,โบนัส,Bonus,expense,debit,False,PL-05,,,,full,53,5301
+530103,ค่าตอบแทนกรรมการ,Board of director compensation,expense,debit,False,PL-05,,,,full,53,5301
+530104,เงินสมทบประกันสังคม และกองทุนทดแทน,Social security contributions,expense,debit,False,PL-05,,sso_expense,SSO,full,53,5301
+530105,เงินสมทบกองทุนสำรองเลี้ยงชีพ,Provident fund contribution expense,expense,debit,False,PL-05,,,,full,53,5301
+530106,ค่ารักษาพยาบาล,Medical expenses,expense,debit,False,PL-05,,,,full,53,5301
+530107,ค่าอบรม สัมมนา,Seminar and training cost,expense,debit,False,PL-05,,,,full,53,5301
+530108,ค่าสวัสดิการอาหาร เครื่องดื่ม,Office welfare expenses - foods and drinks,expense,debit,False,PL-05,,,,full,53,5301
+530109,เงินช่วยเหลือยานพาหนะ,Car allowance,expense,debit,False,PL-05,,,,full,53,5301
+530110,ค่าประกันชีวิตกลุ่ม,Group life insurance expense,expense,debit,False,PL-05,,,,full,53,5301
+530111,ค่าประกันสุขภาพกลุ่ม,Group health insurance expense,expense,debit,False,PL-05,,,,full,53,5301
+530112,ค่าสวัสดิการอื่นๆ,Other welfare expenses,expense,debit,False,PL-05,,,,full,53,5301
+530113,เงินชดเชยการเลิกจ้าง,Severance pay,expense,debit,False,PL-05,,,,full,53,5301
+530114,ค่าใช้จ่ายในการจัดหาพนักงาน,Recruitment expenses,expense,debit,False,PL-05,,,,full,53,5301
+530115,ค่าจ้างเพื่อการวิจัยและพัฒนาเทคโนโลยี,R&D personel cost,expense,debit,False,PL-05,,,,full,53,5301
+530201,ค่าเช่าสำนักงาน,Office rental expenses,expense,debit,False,PL-05,,,,full,53,5302
+530202,ค่าส่วนกลางสำนักงาน,Common space expenses,expense,debit,False,PL-05,,,,full,53,5302
+530203,ค่าเช่ายานพาหนะ,Vehicles rental expenses,expense,debit,False,PL-05,,,,full,53,5302
+530204,ค่าเช่าอุปกรณ์,Equipment rental expenses,expense,debit,False,PL-05,,,,full,53,5302
+530205,ค่าบริการสำนักงานเสมือน,Virtual office expenses,expense,debit,False,PL-05,,,,full,53,5302
+530206,ค่าเครื่องเขียน วัสดุ,Stationery and supplies expenses,expense,debit,False,PL-05,,,,full,53,5302
+530207,ค่าหนังสือ วารสาร,Books and magazines expenses,expense,debit,False,PL-05,,,,full,53,5302
+530208,ค่าสมาชิกสมาคมฯ,Association member expenses,expense,debit,False,PL-05,,,,full,53,5302
+530209,ค่ารักษาความปลอดภัย,Security expenses,expense,debit,False,PL-05,,,,full,53,5302
+530210,ค่ารักษาความสะอาด,Cleaning expenses,expense,debit,False,PL-05,,,,full,53,5302
+530211,ค่าซ่อมแซม,Repairing expenses,expense,debit,False,PL-05,,,,full,53,5302
+530212,ค่าไปรษณีย์ และขนส่ง,"Postal, mailing, and carrier expenses ",expense,debit,False,PL-05,,,,full,53,5302
+530301,ค่าไฟฟ้า,Utility expenses - electricity,expense,debit,False,PL-05,,,,full,53,5303
+530302,ค่าประปา,Utility expenses - water supply,expense,debit,False,PL-05,,,,full,53,5303
+530303,ค่าโทรศัพท์สำนักงาน,Utility expenses - telephone,expense,debit,False,PL-05,,,,full,53,5303
+530304,ค่าอินเทอร์เน็ต,Utility expenses - internet,expense,debit,False,PL-05,,,,full,53,5303
+530305,ค่าบริการโฮสติ้ง และเว็บไซต์,Utility expenses - hosting service,expense,debit,False,PL-05,,,,full,53,5303
+530306,ค่าบริการคลาวด์เซอร์วิซ,Utility expenses - cloud service,expense,debit,False,PL-05,,,,full,53,5303
+530401,ค่าบริการบัญชี,Professional service expenses - bookkeeping,expense,debit,False,PL-05,,,,full,53,5304
+530402,ค่าบริการสอบบัญชี,Professional service expenses - auditing fee,expense,debit,False,PL-05,,,,full,53,5304
+530403,ค่าบริการด้านกฎหมาย,Professional service expenses - legal fee,expense,debit,False,PL-05,,,,full,53,5304
+530404,บริการวิชาชีพอื่นๆ,Professional service expenses - others,expense,debit,False,PL-05,,,,full,53,5304
+530405,ค่าจ้างรับทำงานให้,Service expenses,expense,debit,False,PL-05,,,,full,53,5304
+530406,ค่าจ้างรับเหมา,Contract work expenses,expense,debit,False,PL-05,,,,full,53,5304
+530407,ค่าจ้างทำของ,Hire of work expenses,expense,debit,False,PL-05,,,,full,53,5304
+530408,ค่าบริการอื่นๆ,Other service expenses,expense,debit,False,PL-05,,,,full,53,5304
+530501,ค่าธรรมเนียมธนาคาร,Bank fee,expense,debit,False,PL-05,,,,full,53,5305
+530502,ค่าธรรมเนียมราชการ,Government fee,expense,debit,False,PL-05,,,,full,53,5305
+530503,ค่าธรรมเนียมในการให้คำแนะนำและปรึกษา,Consulting fee,expense,debit,False,PL-05,,,,full,53,5305
+530504,ค่าธรรมเนียมอื่นๆ,Other fee,expense,debit,False,PL-05,,,,full,53,5305
+530505,ภาษีธุรกิจเฉพาะ,Special business tax,expense,debit,False,PL-05,,sbt_expense,PT40,full,53,5305
+530506,ภาษีที่ดินและสิ่งปลูกสร้าง,Land and Building Tax,expense,debit,False,PL-05,,local_tax,,full,53,5305
+530507,ภาษีบำรุงท้องที่,Local maintenance tax,expense,debit,False,PL-05,,local_tax,,full,53,5305
+530508,ภาษีป้าย,Signage tax,expense,debit,False,PL-05,,local_tax,,full,53,5305
+530509,อากรแสตมป์,Stamp tax,expense,debit,False,PL-05,,stamp_duty,,full,53,5305
+530601,รายจ่ายเพื่อสนับสนุนการศึกษา,Donation for supporting education,expense,debit,False,PL-05,,,,limited,53,5306
+530602,รายจ่ายเพื่อสนับสนุนการเรียนรู้และนันทนาการ,Donation for supporting learning and activitiy,expense,debit,False,PL-05,,,,limited,53,5306
+530603,รายจ่ายในการจัดหาหนังสือหรือสื่ออิเล็กทรอนิกส์เพื่อสถานศึกษา,Donation for supporting book and digital media for education institutes,expense,debit,False,PL-05,,,,limited,53,5306
+530604,รายจ่ายในการจัดให้คนพิการได้รับสิทธิประโยชน์,Donation for supporting physical chanllenged people,expense,debit,False,PL-05,,,,limited,53,5306
+530605,รายจ่ายเพื่อพัฒนาครู คณาจารย์ และบุคคลกรทางการศึกษา,Donation for educator development,expense,debit,False,PL-05,,,,limited,53,5306
+530606,รายจ่ายในการตั้งศูนย์พัฒนาเด็กเล็กในสังกัด อปท,Donation for child development center,expense,debit,False,PL-05,,,,limited,53,5306
+530607,รายจ่ายเพื่อโครงการฝึกอบรมอาชีพฯ,Donation for jobs development center,expense,debit,False,PL-05,,,,limited,53,5306
+530608,รายจ่ายบริจาคให้แก่สถานศึกษา,Donation for educational organizations,expense,debit,False,PL-05,,,,limited,53,5306
+530609,รายจ่ายบริจาคให้แก่องค์กรกีฬา,Donation for sport organizations,expense,debit,False,PL-05,,,,limited,53,5306
+530610,รายจ่ายเพื่อการกุศลอื่นๆ,Donation for other charitable organization ,expense,debit,False,PL-05,,,,limited,53,5306
+530611,รายจ่ายเพื่อการศึกษาหรือเพื่อการกีฬา,Donation for education and sport,expense,debit,False,PL-05,,,,limited,53,5306
+530703,ค่าเสื่อมราคา - อาคาร,Depreciations - buildings,expense,debit,False,PL-05,,,,full,53,5307
+530704,ค่าเสื่อมราคา- ส่วนปรับปรุงอาคาร,Depreciation - building Improvements,expense,debit,False,PL-05,,,,full,53,5307
+530706,ค่าเสื่อมราคา - อุปกรณ์สำนักงาน,Depreciations - equipments,expense,debit,False,PL-05,,,,full,53,5307
+530707,ค่าเสื่อมราคา - เครื่องตกแต่งสำนักงาน,Depreciations - furnitures and fixtures,expense,debit,False,PL-05,,,,full,53,5307
+530708,ค่าเสื่อมราคา - ยานพาหนะ,Depreciations - vehicles,expense,debit,False,PL-05,,,,full,53,5307
+530801,ค่าตัดจำหน่าย - ซอฟต์แวร์,Amortization - software,expense,debit,False,PL-05,,,,full,53,5308
+530802,ค่าตัดจำหน่าย - สิทธิการเช่าหรือใช้ทรัพย์สิน,Amortization - leasehold rights,expense,debit,False,PL-05,,,,full,53,5308
+530803,ค่าตัดจำหน่าย - สินทรัพย์ไม่มีตัวตนอื่น,Amortization - other intangible assets,expense,debit,False,PL-05,,,,full,53,5308
+530901,เงินสมทบกองทุนสงเคราะห์ลูกจ้าง,Employee welfare fund contribution,expense,debit,False,PL-05,,ewf_expense,EWF,full,53,5309
+530902,ค่าเดินทางทั่วไป,General Travelling Expense,expense,debit,False,PL-05,,,,full,53,5309
+540101,ค่าใช้จ่ายอื่น,Other expenses,expense,debit,False,PL-06,,,,full,54,5401
+540102,ขาดทุนจากการจำหน่ายทรัพย์สิน,Losses on disposal of property,expense,debit,False,PL-06,,,,full,54,5401
+540103,ขาดทุนจากสินค้าสูญเสีย หรือสูญหาย,Losses from inventory adjustment,expense,debit,False,PL-06,,,,full,54,5401
+540104,ขาดทุนจากอัตราแลกเปลี่ยนที่ยังไม่รับรู้,Unrealized loss on foreign exchange rate,expense,debit,False,PL-06,,,,full,54,5401
+540105,ขาดทุนจากอัตราแลกเปลี่ยน,Realized loss on foreign exchange rate,expense,debit,False,PL-06,,,,full,54,5401
+540190,ขาดทุน(กำไร)จากการปัดเศษ,Loss (gain) from round up,expense,debit,False,PL-06,,,,full,54,5401
+540201,ภาษีซื้อไม่ขอคืน,Unclaimable purchasing taxs,expense,debit,False,PL-06,,vat_input_disallowed,,full,54,5402
+540202,ภาษีซื้อขอคืนไม่ได้,Unclaimed purchasing taxes,expense,debit,False,PL-06,,vat_input_disallowed,,full,54,5402
+540203,เครดิตภาษีไม่ขอคืน,Unclaimed tax return,expense,debit,False,PL-06,,vat_input_disallowed,,full,54,5402
+540204,เบี้ยปรับเงินเพิ่ม,Tax fines and penalties,expense,debit,False,PL-06,,penalty,,none,54,5402
+580101,ดอกเบี้ยจ่าย,Interest expenses,expense,debit,False,PL-07,,,,full,58,5801
+580102,ส่วนลดจากการขายเช็ค,Cheque discounts,expense,debit,False,PL-07,,,,full,58,5801
+580201,ค่าธรรมเนียมการกู้ยืม,Loan fees,expense,debit,False,PL-07,,,,full,58,5802
+590000,ภาษีเงินได้,Income tax,expense,debit,False,PL-08,,cit_expense,PND50,none,59,5900
+999999,บัญชีพัก,Suspense Account,suspense,debit,False,NONE,,,,,99,9999

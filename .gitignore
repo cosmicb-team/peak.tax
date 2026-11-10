@@ -1,0 +1,40 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Node
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / test output
+dist/
+build/
+coverage/
+*.log
+tmp/
+
+# Secrets (API keys, tokens, e-Tax certs)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# Local databases (PGlite / Postgres dumps)
+*.db
+*.sqlite
+pgdata/
+*.dump
+
+# Claude Code local state
+.claude/settings.local.json
+.solofounder/
